@@ -12,15 +12,16 @@ class Student implements Comparable<Student> {
         super();
         choice = 0;
     }
+
     public Student(int num, int choice, int day) {
         super();
         this.num = num;
         this.choice = choice;
         this.day = day;
     }
+
     @Override
     public int compareTo(Student o) {
-        // TODO Auto-generated method stub
         if (this.choice == o.choice) return Integer.compare(this.day, o.day);
         return Integer.compare(this.choice, o.choice);
     }
@@ -31,11 +32,11 @@ public class Main {
     public static void main(String[] args) throws NumberFormatException, IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
-        List<Student> pic = new ArrayList<>();
+        List<Student> pic = new ArrayList<>();//액자 리스트
 
         int N = Integer.parseInt(br.readLine());//빈 액자 수
         int C = Integer.parseInt(br.readLine());//추천 횟수
-        int[] result = new int[N];
+        int[] result = new int[N];//출력위한 배열
 
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < C; i++) {
@@ -62,16 +63,15 @@ public class Main {
             Collections.sort(pic);
         }
 
-        for (int i = 0; i < pic.size(); i++) {
-            result[i] = pic.get(i).num;
-        }
-        Arrays.sort(result);
-        for (int i = 0; i < N; i++) {
-            if (result[i] > 0) {
-                sb.append(result[i] + " ");
+        pic.sort(new Comparator<Student>() {
+            @Override
+            public int compare(Student o1, Student o2) {
+                return o1.num-o2.num;
             }
+        });
+        for (int i = 0; i < pic.size(); i++) {
+            sb.append(pic.get(i).num+" ");
         }
         System.out.println(sb.toString());
     }
-
 }
