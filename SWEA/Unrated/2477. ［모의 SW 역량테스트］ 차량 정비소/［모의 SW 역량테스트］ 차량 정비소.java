@@ -8,14 +8,14 @@ import java.util.StringTokenizer;
 
 public class Solution{
 	static class Person implements Comparable<Person> {
-		int idx, arriveTime, waitTime, infoNum, fixNum;
+		int idx, arriveTime, infoNum, waitTime, fixNum;
 
 		public Person(int idx, int arriveTime) {
 			super();
 			this.idx = idx;
 			this.arriveTime = arriveTime;
-			this.waitTime = 0;
 			this.infoNum = 0;
+			this.waitTime = 0;
 			this.fixNum = 0;
 		}
 
@@ -26,20 +26,21 @@ public class Solution{
 				num = this.infoNum - o.infoNum;
 			return num;
 		}
+
 	}
 
-	static int N, M, K, A, B, infoTime[], fixTime[];
+	static int N, M, K, A, B;
+	static int[] infoTime, fixTime;
 	static Person[] infoList, fixList;
 	static Deque<Person> infoWait, tempWait, endPerson;
 	static PriorityQueue<Person> fixWait;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
+		StringBuilder sb = new StringBuilder();
 
 		int T = Integer.parseInt(br.readLine());
-
 		for (int test = 1; test <= T; test++) {
 			infoWait = new ArrayDeque<>();
 			tempWait = new ArrayDeque<>();
@@ -55,7 +56,6 @@ public class Solution{
 
 			infoTime = new int[N];
 			infoList = new Person[N];
-
 			st = new StringTokenizer(br.readLine());
 			for (int i = 0; i < N; i++) {
 				infoTime[i] = Integer.parseInt(st.nextToken());
@@ -63,7 +63,6 @@ public class Solution{
 
 			fixTime = new int[M];
 			fixList = new Person[M];
-
 			st = new StringTokenizer(br.readLine());
 			for (int i = 0; i < M; i++) {
 				fixTime[i] = Integer.parseInt(st.nextToken());
@@ -76,23 +75,21 @@ public class Solution{
 
 			int time = 0;
 			while (true) {
-				boolean endCondition = true;// 접수창구, 정비창구 모두 비었고, 대기줄까지 빌경우 true
+				boolean endCondition = true;
 
-				// 접수 창구
 				for (int i = 0; i < N; i++) {
-					if (infoList[i] == null) {// 창구가 비었음
+					if (infoList[i] == null) {
 						if (infoWait.isEmpty())
 							continue;
-						Person now = infoWait.peek();
-
-						if (time >= now.arriveTime) {
-							now = infoWait.poll();
-							now.waitTime = 1;
-							now.infoNum = i;
-							infoList[i] = now;
+						Person temp = infoWait.peek();
+						if (time >= temp.arriveTime) {
+							temp = infoWait.poll();
+							temp.infoNum = i;
+							temp.waitTime = 1;
+							infoList[i] = temp;
 						}
 						endCondition = false;
-					} else {// 창구가 비지 않았음
+					} else {
 						infoList[i].waitTime++;
 						endCondition = false;
 					}
@@ -103,44 +100,45 @@ public class Solution{
 					}
 				}
 
-				// 정비창구
+				// 정비 창구
 				for (int j = 0; j < M; j++) {
 					if (fixList[j] == null) {
-						if (fixWait.isEmpty())
-							continue;
-						Person now = fixWait.poll();
-						now.waitTime = 1;
-						now.fixNum = j;
-						fixList[j] = now;
-						endCondition=false;
+						if(fixWait.isEmpty())continue;
+						Person temp = fixWait.poll();
+						temp.fixNum = j;
+						temp.waitTime = 1;
+						fixList[j] = temp;
+						endCondition = false;
 					} else {
 						fixList[j].waitTime++;
-						endCondition=false;
+						endCondition = false;
 					}
-					if(fixList[j]!=null && fixList[j].waitTime==fixTime[j]) {
+					if (fixList[j] != null && fixList[j].waitTime == fixTime[j]) {
 						endPerson.add(fixList[j]);
-						fixList[j]=null;
+						fixList[j] = null;
 					}
 				}
+
+				if (infoWait.isEmpty() && fixWait.isEmpty() && endCondition)
+					break;
 				
-				if(infoWait.isEmpty() && fixWait.isEmpty() && endCondition)break;
-				
-				while(!tempWait.isEmpty())
+				while (!tempWait.isEmpty())
 					fixWait.add(tempWait.poll());
+				
 				time++;
 			}
-			int personNumSum=0;
-			while(!endPerson.isEmpty()) {
-				Person temp=endPerson.poll();
-				if(temp.infoNum==A-1 && temp.fixNum==B-1) {
-					personNumSum+=temp.idx;
-				}
-			}
-			if(personNumSum==0)personNumSum=-1;
-			
-			sb.append("#").append(test).append(" ").append(personNumSum).append("\n");
+
+			int result = 0;
+			while (!endPerson.isEmpty()) {
+				Person temp = endPerson.poll();
+				if (temp.infoNum == A - 1 && temp.fixNum == B - 1)
+					result += temp.idx;
+				
+			}if(result==0)result=-1;
+			sb.append("#").append(test).append(" ").append(result).append("\n");
 		}
 		System.out.println(sb);
+
 	}
 
 }
