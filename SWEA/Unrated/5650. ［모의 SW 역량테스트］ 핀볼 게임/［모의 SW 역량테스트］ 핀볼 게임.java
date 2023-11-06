@@ -76,28 +76,29 @@ public class Solution{
 			if (map[nx][ny] == 0)
 				continue;
 
-			if (map[nx][ny] < 6) {// 블럭
+			// 웜홀
+			if (map[nx][ny] >5) {
+
 				int idx = map[nx][ny];
-				way = type[idx][way];
-				if (way == -1) {
-					cnt = cnt * 2 + 1;
-					break;
+				if (list[idx].get(0)[0] == nx && list[idx].get(0)[1] == ny) {
+					nx = list[idx].get(1)[0];
+					ny = list[idx].get(1)[1];
 				} else {
-					cnt++;
+					nx = list[idx].get(0)[0];
+					ny = list[idx].get(0)[1];
 				}
 				continue;
 			}
 			
-			// 웜홀
+			//블럭
 			int idx = map[nx][ny];
-			if (list[idx].get(0)[0] == nx && list[idx].get(0)[1] == ny) {
-				nx = list[idx].get(1)[0];
-				ny = list[idx].get(1)[1];
+			way = type[idx][way];
+			if (way == -1) {
+				cnt = cnt * 2 + 1;
+				break;
 			} else {
-				nx = list[idx].get(0)[0];
-				ny = list[idx].get(0)[1];
+				cnt++;
 			}
-
 		}
 		return cnt;
 	}
