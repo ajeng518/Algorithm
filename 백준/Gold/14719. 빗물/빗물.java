@@ -10,7 +10,6 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
-		StringBuilder sb = new StringBuilder();
 		
 		st=new StringTokenizer(br.readLine());
 		n=Integer.parseInt(st.nextToken());
@@ -25,12 +24,11 @@ public class Main {
 			}
 		}
 		
-		boolean[][] chk=new boolean[n][m];
-		
 		int result=0;
 		for(int i=0;i<n;i++) {
 			int cnt=0;
 			for(int j=1;j<m;j++) {
+				
 				if(map[i][j]==1) {
 					if(cnt!=0) {
 						result+=cnt;
