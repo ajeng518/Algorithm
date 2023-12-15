@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int n, m, tomato[][];
+	static int n, m, tomato[][], totalZero;
 	static int[] dx = { -1, 0, 1, 0 };// 위-오-아래-왼
 	static int[] dy = { 0, 1, 0, -1 };
 	static List<int[]> welldone;
@@ -23,6 +23,7 @@ public class Main {
 
 		tomato = new int[n][m];
 		welldone = new ArrayList<int[]>();
+
 		for (int i = 0; i < n; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < m; j++) {
@@ -31,8 +32,10 @@ public class Main {
 				}
 			}
 		}
-
-		System.out.println(bfs());
+		if (welldone.isEmpty()) {
+			System.out.println(-1);
+		} else
+			System.out.println(bfs());
 
 	}
 
@@ -42,8 +45,8 @@ public class Main {
 
 		while (!q.isEmpty()) {
 			int[] cur = q.poll();
-
 			day = cur[2];
+            
 			for (int i = 0; i < 4; i++) {
 				int nx = cur[0] + dx[i];
 				if (nx < 0 || nx >= n) {
@@ -54,10 +57,9 @@ public class Main {
 					continue;
 				}
 
-				if (tomato[nx][ny] == -1)
+				if (tomato[nx][ny] !=0)
 					continue;
-				if (tomato[nx][ny] == 1)
-					continue;
+                
 				tomato[nx][ny] = 1;
 				q.add(new int[] { nx, ny, day + 1 });
 			}
@@ -69,11 +71,12 @@ public class Main {
 	}
 
 	private static boolean chkTomato() {
-		for(int i=0;i<n;i++) {
-			for(int j=0;j<m;j++) {
-				if(tomato[i][j]==0)
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (tomato[i][j] == 0)
 					return false;
 			}
-		}return true;
+		}
+		return true;
 	}
 }
