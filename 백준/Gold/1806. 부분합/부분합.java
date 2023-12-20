@@ -12,7 +12,7 @@ public class Main {
         int n = Integer.parseInt(st.nextToken());
         int s = Integer.parseInt(st.nextToken());
 
-        int[] num = new int[n+1];
+        int[] num = new int[n];
         st = new StringTokenizer(br.readLine());
         int sum = 0;
         int answer = 1_000_001;
@@ -29,20 +29,23 @@ public class Main {
                 answer = 0;
             } else {
                 int sub = 0, start = 0, end = 0;
-                while (start <= n &&end<=n) {
-                    if(sub>=s && answer>end-start)
-                        answer=end-start;
-                    else if (sub < s) {
+
+                while (true) {
+                    if (sub < s) {//구간합이 s보다 작을 경우 end 값을 증가시킨다
+                        if(end==n){
+                            break;
+                        }
                         sub += num[end++];
 
-                    } else{
+                    } else{//구간합이 s보다 크거나 같다면 start값을 그 다음 값으로 증가시킨다.
+                        if(answer>end-start){
+                            answer=end-start;
+                        }
                         sub -= num[start++];
                     }
-
-
                 }
             }
         }
-        System.out.println(answer);
+        System.out.println(answer);//정답 출력해주새우
     }
 }
