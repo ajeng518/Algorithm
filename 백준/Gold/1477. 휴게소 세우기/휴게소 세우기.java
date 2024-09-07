@@ -8,7 +8,6 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
         StringTokenizer st;
 
         st = new StringTokenizer(br.readLine());
@@ -42,12 +41,24 @@ public class Main {
             for (int i = 1; i < rest.size(); i++) {
                 cnt += (rest.get(i) - rest.get(i - 1) - 1) / mid;
             }
-
             if (cnt > m)
                 left = mid + 1;
             else right = mid - 1;
         }
 
         return left;
+    }
+
+
+    private static void findMaxTerm(List<Integer> rest) {
+        int ans = 0;
+
+        int temp = 0;
+        for (int restPoint : rest) {
+            ans = Math.max(restPoint - temp, ans);
+            temp = restPoint;
+        }
+
+        ans = Math.max(ans, l - temp);
     }
 }
