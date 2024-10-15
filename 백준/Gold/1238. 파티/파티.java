@@ -4,13 +4,18 @@ import java.util.*;
 
 public class Main {
 
-    static class Node {
+    static class Node implements Comparable<Node> {
         int position;
         int value;
 
         public Node(int position, int value) {
             this.position = position;
             this.value = value;
+        }
+
+        @Override
+        public int compareTo(Node o) {
+            return Integer.compare(value, o.value);
         }
     }
 
@@ -60,9 +65,7 @@ public class Main {
     private static int[] dijkstra(Map<Integer, List<Node>> list, int start, int n) {
         int[] dp = new int[n + 1];
         boolean[] chk = new boolean[n + 1];
-        PriorityQueue<Node> pq = new PriorityQueue<>((o1, o2) -> {
-            return o1.value - o2.value;
-        });
+        PriorityQueue<Node> pq = new PriorityQueue<>();
         Arrays.fill(dp, Integer.MAX_VALUE);
 
         dp[start] = 0;
@@ -73,19 +76,19 @@ public class Main {
             Node cur = pq.poll();
 
             if (chk[cur.position]) continue;
-            if (cur.value > dp[cur.position]) continue;
-
             chk[cur.position] = true;
 
             for (Node next : list.get(cur.position)) {
                 if (chk[next.position]) continue;
-                if (dp[next.position] <= cur.value + next.value) continue;
+                int newValue = cur.value + next.value;
+                if (dp[next.position] <= newValue) continue;
 
-                dp[next.position] = cur.value + next.value;
+                dp[next.position] = newValue;
 
                 pq.add(new Node(next.position, dp[next.position]));
             }
         }
+//        System.out.println(Arrays.toString(dp));
         return dp;
     }
 }
