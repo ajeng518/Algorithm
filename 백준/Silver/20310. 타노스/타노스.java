@@ -20,10 +20,26 @@ public class Main {
         zero = zero / 2;
         one = one / 2;
 
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < zero; i++) sb.append('0');
-        for (int i = 0; i < one; i++) sb.append('1');
+        int i = 0;
+        while (one > 0) {
+            if (input.charAt(i) == '1') {
+                input = input.substring(0, i) + input.substring(i + 1);
+                one--;
+                i--;
+            }
+            i++;
+        }
 
-        System.out.println(sb);
+        int j = input.length() - 1;
+        while (zero > 0) {
+            if (input.charAt(j) == '0') {
+                input = input.substring(0, j) + input.substring(j + 1);
+                zero--;
+                j=input.length();
+            }
+            j--;
+        }
+
+        System.out.println(input);
     }
 }
