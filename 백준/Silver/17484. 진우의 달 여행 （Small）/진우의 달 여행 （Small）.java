@@ -33,6 +33,8 @@ public class Main {
 
         }
 
+        int min = 100001;
+
         for (int i = 1; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 for (int k = 0; k < 3; k++) {
@@ -44,16 +46,10 @@ public class Main {
 
                             dp[k][i][j] = Math.min(dp[q][i + dXY[q][0]][j + dXY[q][1]] + map[i][j], dp[k][i][j]);
                         }
+                        if(i==n-1)
+                            min = Math.min(dp[k][n - 1][j], min);
                     }
                 }
-            }
-        }
-
-        int min = 100001;
-
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < m; j++) {
-                min = Math.min(dp[i][n - 1][j], min);
             }
         }
 
