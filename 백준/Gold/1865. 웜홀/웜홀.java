@@ -1,10 +1,10 @@
 import java.io.BufferedReader;
-        import java.io.IOException;
-        import java.io.InputStreamReader;
-        import java.util.ArrayList;
-        import java.util.Arrays;
-        import java.util.List;
-        import java.util.StringTokenizer;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class Main {
     static final int INF = 5_000_000;
@@ -72,43 +72,32 @@ public class Main {
 //                answer = "YES";
 //            }
 
-            sb.append(BellmanFord(n, 2 * m + w, 1)).append("\n");
+            sb.append(BellmanFord(n, 2 * m + w)).append("\n");
 
         }
 
         System.out.println(sb);
     }
 
-    public static String BellmanFord(int n, int mw, int start) {
+    public static String BellmanFord(int n, int mw) {
         int[] dist = new int[n + 1];
         Arrays.fill(dist, INF);
 
-//        dist[start] = 0;
-//        boolean isChange;
-
         for (int i = 1; i < n; i++) {
-//            isChange = false;
-
+            boolean isChange = false;
             for (int j = 0; j < mw; j++) {
                 Node cur = list.get(j);
+                int newCost = dist[cur.start] + cur.cost;
+                if (dist[cur.end] <= newCost) continue;
 
-                // if (dist[cur.start] == INF) continue;
-                int newCose = dist[cur.start] + cur.cost;
-                if (dist[cur.end] <= newCose) continue;
-
-                dist[cur.end] = newCose;
-//                isChange = true;
-
+                dist[cur.end] = newCost;
+                isChange = true;
             }
-
-//            if (!isChange) break;
+            if (!isChange) break;
         }
-
 
         for (int j = 0; j < mw; j++) {
             Node cur = list.get(j);
-
-            // if (dist[cur.start] == INF) continue;
             if (dist[cur.end] <= dist[cur.start] + cur.cost) continue;
             return "YES";
         }
