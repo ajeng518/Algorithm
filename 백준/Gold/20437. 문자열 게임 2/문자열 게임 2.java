@@ -44,11 +44,16 @@ public class Main {
                     }
                 }
 
-                s++;
+                while (true) {
+                    s++;
+                    if (s >= n) break;
+                    e = s;
+                    cnt = 0;
+                    now = input[s];
+                    if (alpha[now - 'a'] >= k) break;
+                }
                 if (s >= n) break;
-                e = s;
-                cnt = 0;
-                now = input[s];
+
             }
 
             if (min == Integer.MAX_VALUE || max == Integer.MIN_VALUE) sb.append(-1).append(" ");
