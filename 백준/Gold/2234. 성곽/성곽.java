@@ -60,7 +60,7 @@ public class Main {
                 if (map[i][j] == 0) continue;
 
                 //벽하나 제거하면서 얻을 수 있는 가장 넓은 방 크기 구하기
-                for (int k = 0; k < 4; k++) {
+                for (int k = 2; k < 4; k++) {
                     if ((map[i][j] & (1 << k)) == 0) //이 방면에 벽 없음
                         continue;
 
