@@ -70,14 +70,14 @@ public class Main {
             int cost = 0;
 
             cur = new int[2];
-            cur[0] = Math.abs(position[now][1] + position[i][1]) / 2;
-            cur[1] = +Math.abs(position[now][2] + position[i][2]) / 2;
+            cur[0] = position[now][1] + position[i][1];
+            cur[1] = position[now][2] + position[i][2];
 
             int x = 1;
             int y = 1;
 
-            if (cur[0] > w / 2) x = w;
-            if (cur[1] > l / 2) y = l;
+            if (cur[0] > w) x = w;
+            if (cur[1] > l) y = l;
 
             int[] nowEl = {x, y};
 
