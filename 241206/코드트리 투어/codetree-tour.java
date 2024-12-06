@@ -143,12 +143,10 @@ public class Main {
                 case 500:
                     int change = Integer.parseInt(st.nextToken());
 
-                    if (change == start) break;
-                    else {
-                        start = change;
-                        makeStartPoint(start);
-                        break;
-                    }
+                    start = change;
+                    makeStartPoint(start);
+                    break;
+
             }
         }
 
@@ -165,26 +163,29 @@ public class Main {
             int[] dist = dijkstra(start);
             dist[start] = 0;//출발지 경로 0
             distAll.put(start, dist);
-
-            PriorityQueue<Tour> temp = new PriorityQueue<>();
-            for(Tour tour: tourList.values()) {
-                tour.dist = tour.revenue - dist[tour.destNode];
-                temp.add(tour);
-            }
-            items = temp;
         }
+
+        PriorityQueue<Tour> temp = new PriorityQueue<>();
+        int[] dist=distAll.get(start);
+        for (Tour tour : tourList.values()) {
+            tour.dist = tour.revenue - dist[tour.destNode];
+            temp.add(tour);
+        }
+        items = temp;
     }
 
     private static Tour pickTour() {
         if (items.isEmpty()) return null;
 
         Tour best = items.poll();
-        while (!items.isEmpty() && tourList.get(best.tourId) == null)
+
+        while (!items.isEmpty() && tourList.get(best.tourId) == null) {
             best = items.poll();
+        }
 
         if (tourList.get(best.tourId) == null) return null;
-        return best;
 
+        return best;
     }
 
     private static int[] dijkstra(int start) {
@@ -212,8 +213,6 @@ public class Main {
                 pq.add(new NodeEdge(next.point, dist[next.point]));
             }
         }
-
-
 
         return dist;
     }
