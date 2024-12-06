@@ -3,7 +3,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-     static class NodeEdge implements Comparable<NodeEdge> {
+    static class NodeEdge implements Comparable<NodeEdge> {
         int point;
         int cost;
 
@@ -70,20 +70,39 @@ public class Main {
 
                         if (s == e) continue;//사이클 제거
 
-
+                        boolean sameRoot = false;
                         edgeList.put(s, edgeList.getOrDefault(s, new ArrayList<>()));
-                        edgeList.get(s).add(new NodeEdge(e, cost));
+                        for (NodeEdge node : edgeList.get(s)) {
+                            if (node.point == e) {
+                                node.cost = Math.min(node.cost, cost);
+                                sameRoot = true;
+                                break;
+                            }
+                        }
+                        if (!sameRoot)
+                            edgeList.get(s).add(new NodeEdge(e, cost));
 
+                        sameRoot = false;
                         edgeList.put(e, edgeList.getOrDefault(e, new ArrayList<>()));
-                        edgeList.get(e).add(new NodeEdge(s, cost));
+                        for (NodeEdge node : edgeList.get(e)) {
+                            if (node.point == s) {
+                                node.cost = Math.min(node.cost, cost);
+                                sameRoot = true;
+                                break;
+                            }
+                        }
+                        if (!sameRoot)
+                            edgeList.get(e).add(new NodeEdge(s, cost));
 
-
-                        distAll = new HashMap<>();
                     }
 
+                    distAll = new HashMap<>();
                     tourList = new HashMap<>();
+
                     //초기 시작점은 0번 도시에서 시작
                     start = 0;
+                    makeStartPoint(start);
+
 
                     break;
                 //여행상품 생성
@@ -104,14 +123,7 @@ public class Main {
                     break;
                 //최적상품판매
                 case 400:
-                    if (distAll == null) {
-                        distAll = new HashMap<>();
-                    }
-                    if (!distAll.containsKey(start)) {
-                        int[] dist = dijkstra(start);
-                        dist[start] = 0;//출발지 경로 0
-                        distAll.put(start, dist);
-                    }
+
                     Tour bestPick = pickTour(distAll.get(start));
 
                     if (bestPick != null) {
@@ -126,8 +138,12 @@ public class Main {
                 //여행 상품 출발지 변경
                 case 500:
                     int change = Integer.parseInt(st.nextToken());
-                    start = change;
-                    break;
+                    if (change == start) break;
+                    else {
+                        start = change;
+                        makeStartPoint(start);
+                        break;
+                    }
             }
         }
 
@@ -135,8 +151,21 @@ public class Main {
 
     }
 
+    private static void makeStartPoint(int start) {
+        if (distAll == null) {
+            distAll = new HashMap<>();
+        }
+
+        if (!distAll.containsKey(start)) {
+            int[] dist = dijkstra(start);
+            dist[start] = 0;//출발지 경로 0
+            distAll.put(start, dist);
+        }
+    }
+
     private static Tour pickTour(int[] dist) {
         PriorityQueue<Tour> pq = new PriorityQueue<>();
+
         for (int tourIdx : tourList.keySet()) {
             Tour cur = tourList.get(tourIdx);
 
