@@ -75,7 +75,7 @@ public class Main {
                         edgeList.get(s).add(new NodeEdge(e, cost));
 
                         edgeList.put(e, edgeList.getOrDefault(e, new ArrayList<>()));
-                        edgeList.get(e).add(new NodeEdge(s,cost));
+                        edgeList.get(e).add(new NodeEdge(s, cost));
 
 
                         distAll = new HashMap<>();
@@ -104,6 +104,9 @@ public class Main {
                     break;
                 //최적상품판매
                 case 400:
+                    if (distAll == null) {
+                        distAll = new HashMap<>();
+                    }
                     if (!distAll.containsKey(start)) {
                         int[] dist = dijkstra(start);
                         dist[start] = 0;//출발지 경로 0
@@ -115,16 +118,15 @@ public class Main {
                         if (bestPick.revenue >= bestPick.dist) {
                             sb.append(bestPick.tourId);
                             tourList.remove(bestPick.tourId);
-                        }
-                        else sb.append(-1);
+                        } else sb.append(-1);
                     } else sb.append(-1);
 
                     sb.append("\n");
                     break;
                 //여행 상품 출발지 변경
                 case 500:
-                    int change=Integer.parseInt(st.nextToken());
-                    start=change;
+                    int change = Integer.parseInt(st.nextToken());
+                    start = change;
                     break;
             }
         }
@@ -157,7 +159,7 @@ public class Main {
 
         PriorityQueue<NodeEdge> pq = new PriorityQueue<>();
         pq.add(new NodeEdge(start, 0));
-        dist[start]=0;
+        dist[start] = 0;
 
         while (!pq.isEmpty()) {
             NodeEdge cur = pq.poll();
