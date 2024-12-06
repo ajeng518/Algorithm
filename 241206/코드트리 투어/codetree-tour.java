@@ -3,7 +3,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static class NodeEdge implements Comparable<NodeEdge> {
+     static class NodeEdge implements Comparable<NodeEdge> {
         int point;
         int cost;
 
@@ -24,19 +24,19 @@ public class Main {
         int destNode;//도착지
         int dist;
 
-        public Tour(int tourId, int revenue, int destNode) {
+        public Tour(int tourId, int revenue, int destNode, int dist) {
             this.tourId = tourId;
             this.revenue = revenue;
             this.destNode = destNode;
-            this.dist = 0;
+            this.dist = dist;
         }
 
         @Override
         public int compareTo(Tour o) {
-            if ((o.revenue - o.dist) == (this.revenue - this.dist)) {
+            if (o.dist == this.dist) {
                 return this.tourId - o.tourId;
             }
-            return (o.revenue - o.dist) - (this.revenue - this.dist);
+            return o.dist - this.dist;
         }
     }
 
@@ -44,6 +44,7 @@ public class Main {
     static Map<Integer, List<NodeEdge>> edgeList;
     static Map<Integer, Tour> tourList;
     static Map<Integer, int[]> distAll;
+    static PriorityQueue<Tour> items;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -62,6 +63,9 @@ public class Main {
                     n = Integer.parseInt(st.nextToken());
                     m = Integer.parseInt(st.nextToken());
                     edgeList = new HashMap<>();
+                    distAll = new HashMap<>();
+                    tourList = new HashMap<>();
+                    items = new PriorityQueue<>();
 
                     for (int i = 0; i < m; i++) {
                         int s = Integer.parseInt(st.nextToken());
@@ -93,51 +97,52 @@ public class Main {
                         }
                         if (!sameRoot)
                             edgeList.get(e).add(new NodeEdge(s, cost));
-
                     }
-
-                    distAll = new HashMap<>();
-                    tourList = new HashMap<>();
 
                     //초기 시작점은 0번 도시에서 시작
                     start = 0;
                     makeStartPoint(start);
 
-
                     break;
+
                 //여행상품 생성
                 case 200:
                     int id = Integer.parseInt(st.nextToken());
                     int reve = Integer.parseInt(st.nextToken());
                     int dest = Integer.parseInt(st.nextToken());
 
-                    tourList.put(id, new Tour(id, reve, dest));
+                    int dist = reve - distAll.get(start)[dest];// 우선순위 계산
+
+                    tourList.put(id, new Tour(id, reve, dest, dist));
+                    items.add(tourList.get(id));
 
                     break;
+
                 //여행상품취소
                 case 300:
                     int deleteKey = Integer.parseInt(st.nextToken());
+
                     if (tourList.containsKey(deleteKey))
                         tourList.remove(deleteKey);
 
                     break;
+
                 //최적상품판매
                 case 400:
+                    Tour bestPick = pickTour();
 
-                    Tour bestPick = pickTour(distAll.get(start));
-
-                    if (bestPick != null) {
-                        if (bestPick.revenue >= bestPick.dist) {
-                            sb.append(bestPick.tourId);
-                            tourList.remove(bestPick.tourId);
-                        } else sb.append(-1);
+                    if (bestPick != null && bestPick.dist >= 0) {
+                        sb.append(bestPick.tourId);
+                        tourList.remove(bestPick.tourId);
                     } else sb.append(-1);
 
                     sb.append("\n");
                     break;
+
                 //여행 상품 출발지 변경
                 case 500:
                     int change = Integer.parseInt(st.nextToken());
+
                     if (change == start) break;
                     else {
                         start = change;
@@ -160,31 +165,32 @@ public class Main {
             int[] dist = dijkstra(start);
             dist[start] = 0;//출발지 경로 0
             distAll.put(start, dist);
+
+            PriorityQueue<Tour> temp = new PriorityQueue<>();
+            for(Tour tour: tourList.values()) {
+                tour.dist = tour.revenue - dist[tour.destNode];
+                temp.add(tour);
+            }
+            items = temp;
         }
     }
 
-    private static Tour pickTour(int[] dist) {
-        PriorityQueue<Tour> pq = new PriorityQueue<>();
+    private static Tour pickTour() {
+        if (items.isEmpty()) return null;
 
-        for (int tourIdx : tourList.keySet()) {
-            Tour cur = tourList.get(tourIdx);
+        Tour best = items.poll();
+        while (!items.isEmpty() && tourList.get(best.tourId) == null)
+            best = items.poll();
 
-            if (dist[cur.destNode] == Integer.MAX_VALUE) continue;
-
-            cur.dist = dist[cur.destNode];
-
-            pq.add(cur);
-        }
-
-        if (pq.isEmpty()) return null;
-        return pq.poll();
+        if (tourList.get(best.tourId) == null) return null;
+        return best;
 
     }
 
     private static int[] dijkstra(int start) {
         boolean[] chk = new boolean[n];
         int[] dist = new int[n];
-        Arrays.fill(dist, Integer.MAX_VALUE);
+        Arrays.fill(dist, Integer.MAX_VALUE / 10);
 
         PriorityQueue<NodeEdge> pq = new PriorityQueue<>();
         pq.add(new NodeEdge(start, 0));
@@ -206,6 +212,9 @@ public class Main {
                 pq.add(new NodeEdge(next.point, dist[next.point]));
             }
         }
+
+
+
         return dist;
     }
 }
