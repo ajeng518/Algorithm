@@ -8,25 +8,29 @@ public class Main {
         StringTokenizer st;
 
         int n = Integer.parseInt(br.readLine());
-        int[] value = new int[n + 1];
-        int[] road = new int[n];
-        long answer = 0L;
+        long[] value = new long[n + 1];
+        long[] road = new long[n];
+
 
         st = new StringTokenizer(br.readLine());
         for (int i = 1; i < n; i++) {
-            road[i] = Integer.parseInt(st.nextToken());
+            road[i] = Long.parseLong(st.nextToken());
         }
 
-        value[0] = Integer.MAX_VALUE;
+        long answer = 0L;
+        long min = Integer.MAX_VALUE;
+
         st = new StringTokenizer(br.readLine());
         for (int i = 1; i <= n; i++) {
-            value[i] = Integer.parseInt(st.nextToken());
-            if (value[i - 1] < value[i]) value[i] = value[i - 1];
+            value[i] = Long.parseLong(st.nextToken());
+
         }
 
-        for (int i = 1; i < n; i++) {
-            answer+=road[i]*value[i];
-        }
+       for(int i=1;i<n;i++){
+           if (min > value[i]) min = value[i];
+           answer += min * road[i];
+       }
+
         System.out.println(answer);
     }
 }
