@@ -3,25 +3,34 @@ import java.io.*;
 
 public class Main {
   static int n;
-  static List<Integer>[] friends;
+  static Node[] friends;
   static int[][] dp;
   static boolean[] visited;
+
+  static class Node{
+    int node;
+    Node next;
+
+    Node(int node, Node next){
+      this.node=node;
+      this.next=next;
+    }
+  }
   
   public static void main(String[] args) throws Exception {
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
     StringTokenizer st;
 
     n=Integer.parseInt(br.readLine());
-    friends=new List[n+1];
-    for(int i=1;i<=n;i++) friends[i]=new ArrayList<>();
+    friends=new Node[n+1];
 
     for(int i=0;i<n-1;i++){
       st=new StringTokenizer(br.readLine());
       int nodeA=Integer.parseInt(st.nextToken());
       int nodeB=Integer.parseInt(st.nextToken());
       
-      friends[nodeA].add(nodeB);
-      friends[nodeB].add(nodeA);
+      friends[nodeA]=new Node(nodeB, friends[nodeA]);
+      friends[nodeB]=new Node(nodeA, friends[nodeB]);
     }
 
     dp=new int[n+1][2];
@@ -38,11 +47,11 @@ public class Main {
     dp[num][0]=0;
     dp[num][1]=1;
 
-    for(int child: friends[num]){
-      if(visited[child]) continue;
-      dfs(child);
-      dp[num][0]+=dp[child][1];
-      dp[num][1]+=Math.min(dp[child][1], dp[child][0]);
+    for(Node child=friends[num]; child !=null; child=child.next){
+      if(visited[child.node]) continue;
+      dfs(child.node);
+      dp[num][0]+=dp[child.node][1];
+      dp[num][1]+=Math.min(dp[child.node][1], dp[child.node][0]);
     }
   }
 }
