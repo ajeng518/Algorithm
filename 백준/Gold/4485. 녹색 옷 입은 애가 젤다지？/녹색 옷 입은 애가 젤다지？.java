@@ -32,6 +32,7 @@ public class Main {
 
       while(!pq.isEmpty()){
         int[] cur=pq.poll();
+        if(cur[0]==n-1 && cur[1]==n-1) break;
 
         for(int i=0;i<4;i++){
           int nx=cur[0]+dx[i];
