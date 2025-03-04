@@ -1,48 +1,39 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.*;
+import java.io.*;
 
-public class Main{
-	static int n,ans;
-	static StringBuilder sb=new StringBuilder();
+public class Main {
+  static StringBuilder sb;
+  public static void main(String[] args) throws Exception {
+    BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+    sb=new StringBuilder();
+    
+    int n=Integer.parseInt(br.readLine());
+    
+    re(n-1, 2);
+    re(n-1, 3);
+    re(n-1, 5);
+    re(n-1, 7);
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-		n=Integer.parseInt(br.readLine());
-		ans=0;
+    System.out.println(sb);
+    
+  }
 
-		permu(0,0);
+  private static void re(int n, int num){
+    if(n==0){
+      sb.append(num).append("\n");
+      return;
+    }
 
-		System.out.print(sb.toString());
-	}
+    for(int i=1;i <= 9; i+=2){
+      if(chk(num*10+i))
+        re(n-1, num*10+i);
+    }
+  }
 
-	private static void permu(int cnt, int num){
-		if(cnt>0 && !checking(cnt, num))	return;
-
-		if(cnt==n){
-			sb.append(num+"\n");
-			return;
-		}
-
-		for(int i=1;i<=9;i++){
-			if(cnt==0 && i==1||i==4||i==6||i==8)	continue;
-			if(cnt>0 && i%2==0)	continue;
-			permu(cnt+1,num*10+i);
-		}
-	}
-
-	private static boolean checking(int cnt, int num) {
-		if (cnt > 1) {
-			for (int i = 2; i <= num / 2; i++) {
-				if (num % i == 0) return false;
-			}
-			return true;
-		} else if (cnt == 1) {
-			if (num == 2 || num == 3 || num == 5 || num == 7) return true;
-			else return false;
-		}
-		return true;
-	}
-
-
+  private static boolean chk(int num){
+    for(int i=(int)Math.sqrt(num); i> 1; i--){
+      if(num % i==0) return false;
+    }
+    return true;
+  }
 }
