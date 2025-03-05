@@ -1,86 +1,87 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-	static int n, k, map[][], max=0;
-	static int word[];
+  static int max, n, k;
+  static int[] word;
+  
+  public static void main(String[] args) throws Exception {
+    BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+    StringTokenizer st = new StringTokenizer(br.readLine());
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
+    n=Integer.parseInt(st.nextToken());
+    k=Integer.parseInt(st.nextToken());
+    max=0;
 
-		int know = init();
+    if(k < 5){
+      System.out.println(0);
+      System.exit(0);
+    }
+    
+    if(k == 26){
+      System.out.println(n);
+      System.exit(0);
+    }
 
-		st = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken());
-		k = Integer.parseInt(st.nextToken());
+    int know = init();
+    k -= 5;
+    
+    word=new int[n];
+    int all = 0;
+    
+    for(int i = 0; i < n; i++){
+      String input = br.readLine();
 
-		if (k - 5 < 0) {
+      word[i] = know;
+      
+      for(int j = 4; j < input.length() - 4; j++)
+        word[i] |= 1 << input.charAt(j)-96;
 
-		} else if (k == 26) {
-			max = n;
-		} else {
-			word = new int[n];
-			int all = 0;
+      all |= word[i];
+    }
 
-			for (int i = 0; i < n; i++) {
-				String temp = br.readLine();
+    all ^= know;
+    
+    if(Integer.bitCount(all) < k)
+      max = n;
+    else
+      re(all, 2, k, know);
+    
+    System.out.println(max);
+  }
 
-				word[i] = know;
-				for (int j = 4; j < temp.length() - 4; j++) {
-					word[i] |= 1 << temp.charAt(j) - 96;
-				}
-				all |= word[i];
+  private static void re(int all, int idx, int k, int know){
+    if(k==0){
+      //읽을 수 있는 단어 검사
+      max=Math.max(chkReadWord(know), max);
+      return;
+    }
+    
+    for(int i = idx; i<=26; i++){
+      if((all & (1<<i) ) == 0) continue;
 
-			}
-			all ^= know;
-			if (Integer.bitCount(all) < k - 5) {
-				max = n;
-			} else
-				re(k - 5, 2, know, all);
-		}
-		System.out.println(max);
+      re(all, i+1, k-1, (know | (1 << i)));
+    }
+  }
 
-	}
+  private static int init(){
+    String base="acint";
+    int know=0;
+    
+    for(int i=0; i < 5; i++){
+      know = (know|(1<<(base.charAt(i)-96)));
+    }
 
-	private static void re(int cnt, int idx, int know, int all) {
-		if (cnt == 0) {
-			int now = checkWord(know);
-			max = Math.max(max, now);
+    return know;
+  }
 
-			return;
-		}
-
-		for (int i = idx; i <= 26; i++) {
-			if ((all & (1 << i)) > 0) {
-				re(cnt - 1, i + 1, (know | (1 << i)), all);
-			}
-		}
-	}
-
-	private static int checkWord(int know) {
-		int cnt = 0;
-
-		for (int i = 0; i < n; i++) {
-
-			if (word[i] == (know & word[i]))
-				cnt++;
-		}
-
-		return cnt;
-	}
-
-	private static int init() {
-		String str = "antatica";
-		int know = 0;
-		for (int i = 0; i < str.length(); i++) {
-//			System.out.println(str.charAt(i));
-			know = (know | (1 << (str.charAt(i) - 96)));
-		}
-
-		return know;
-	}
+  private static int chkReadWord(int know){
+    int cnt=0;
+    
+    for(int i = 0; i < n; i++){
+      if(word[i] == (word[i] & know)) cnt++;
+    }
+    
+    return cnt;
+  }
 }
