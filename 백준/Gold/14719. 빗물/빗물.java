@@ -1,62 +1,52 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-	static int n, m, map[][];
+  static int h, w;
+  static int[][] map;
+  
+  public static void main(String[] args) throws Exception {
+    BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+    StringTokenizer st=new StringTokenizer(br.readLine());
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		
-		st=new StringTokenizer(br.readLine());
-		n=Integer.parseInt(st.nextToken());
-		m=Integer.parseInt(st.nextToken());
-		
-		map=new int[n][m];
-		st=new StringTokenizer(br.readLine());
-		for(int i=0;i<m;i++) {
-			int now=Integer.parseInt(st.nextToken());
-			for(int j=0;j<now;j++) {
-				map[j][i]=1;
-			}
-		}
-		
-		int result=0;
-		for(int i=0;i<n;i++) {
-			int cnt=0;
-			for(int j=1;j<m;j++) {
-				
-				if(map[i][j]==1) {
-					if(cnt!=0) {
-						result+=cnt;
-						cnt=0;
-					}
-					continue;
-				}
-				if(cnt==0) {
-					if(map[i][j-1]==1) {
-						cnt++;
-					}
-				}else if(j==m-2) {
-					if(map[i][j+1]!=1) {
-						cnt=0;
-					}else {
-						cnt++;
-					}
-				}else if(j==m-1){
-					if(map[i][j]!=1) {
-						cnt=0;
-					}
-				}else if(cnt>0) {
-					cnt++;
-				}
-			}
-		}
-		
-		System.out.println(result);
-		
-	}
+    h=Integer.parseInt(st.nextToken());//
+    w=Integer.parseInt(st.nextToken());//
+    
+    map=new int[h][w];
+    st=new StringTokenizer(br.readLine());
+    for(int i=0; i < w; i++){
+      int block=Integer.parseInt(st.nextToken());
+      for(int j=h-1;j>=h-block; j--){
+        map[j][i]=1;
+      }
+    }
+    int ans=0;
+    
+    for(int i=0; i<h;i++){
+      for(int j=0; j<w; j++){
+        if(map[i][j]!=1) continue;
+
+        boolean isPossible=false;
+        int cnt=0;
+        int next=j;
+        
+        for(int k = j+1; k < w; k++){
+          if(map[i][k]==1){
+            if(cnt>0){
+              isPossible=true;
+              next=k-1;
+            }
+            break;
+          }
+          cnt++;
+        }
+
+        if(!isPossible) continue;
+        ans+=cnt;
+        j=next;
+      }
+    }
+
+    System.out.println(ans);
+  }
 }
