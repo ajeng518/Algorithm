@@ -1,72 +1,79 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.util.*;
 
 public class Main {
-    public static class Bus implements  Comparable<Bus>{
-        int idx;
+    static class Edge implements Comparable<Edge> {
+        int node;
         int cost;
 
-        public Bus() {
-        }
-
-        public Bus(int idx, int cost) {
-            this.idx = idx;
+        public Edge(int node, int cost) {
+            this.node = node;
             this.cost = cost;
         }
 
         @Override
-        public int compareTo(Bus o) {
-            return cost-o.cost;
+        public int compareTo(Edge o) {
+            return this.cost - o.cost;
         }
+
     }
-    public static void main(String[] args) throws IOException {
-        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+
+    static int[] dp;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
-        PriorityQueue<Bus>pq=new PriorityQueue<>();
-        List<Bus>[]busList;
-        int n=Integer.parseInt(br.readLine());
-        int m=Integer.parseInt(br.readLine());
 
-        busList=new ArrayList[n+1];
-        for(int i=0;i<=n;i++){
-            busList[i]=new ArrayList<>();
+        int n = Integer.parseInt(br.readLine());
+        int m = Integer.parseInt(br.readLine());
+        List<Edge>[] nodeList = new List[n + 1];
+        for(int i=1;i<=n;i++) nodeList[i]=new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int start = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
+            int len = Integer.parseInt(st.nextToken());
+
+            nodeList[start].add(new Edge(end, len));
         }
 
-        for(int i=0;i<m;i++){
-            st=new StringTokenizer(br.readLine());
-            int idx=Integer.parseInt(st.nextToken());
-            busList[idx].add(new Bus(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
-        }
+        st = new StringTokenizer(br.readLine());
+        int start = Integer.parseInt(st.nextToken());
+        int end = Integer.parseInt(st.nextToken());
 
-        st=new StringTokenizer(br.readLine());
-        int start=Integer.parseInt(st.nextToken());
-        int end=Integer.parseInt(st.nextToken());
-        int MAX=Integer.MAX_VALUE;
+        dp=new int[n+1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
 
-        int[] canGo=new int[n+1];//1부터 시작할거임
-        Arrays.fill(canGo,MAX);
-        boolean[] chk=new boolean[n+1];
+        System.out.println(dijkstra(n, m, start, end, nodeList));
 
-        canGo[start]=0;
-        pq.add(new Bus(start, 0));
+    }
+
+    private static int dijkstra(int n, int m, int start, int end, List<Edge>[] list){
+        PriorityQueue<Edge> pq=new PriorityQueue<>();
+        pq.add(new Edge(start, 0));
+        boolean[] visited=new boolean[n+1];
+        dp[start]=0;
 
         while(!pq.isEmpty()){
-            Bus cur=pq.poll();
+            Edge cur=pq.poll();
 
-            if(chk[cur.idx])continue;
-            chk[cur.idx]=true;
+            if(visited[cur.node]) continue;
+            visited[cur.node]=true;
 
-            for(Bus next:busList[cur.idx]){
-                if(!chk[next.idx] && canGo[next.idx]>canGo[cur.idx]+next.cost){
-                    canGo[next.idx]=canGo[cur.idx]+next.cost;
-                    pq.add(new Bus(next.idx, canGo[next.idx]));
-                }
+            if(cur.node == end) return  dp[end];
+
+            for(Edge next: list[cur.node]){
+                if(visited[next.node])continue;
+                if(dp[next.node]<=dp[cur.node]+next.cost) continue;
+
+                dp[next.node]=dp[cur.node]+next.cost;
+                pq.add(new Edge(next.node, dp[next.node]));
             }
         }
 
-        System.out.println(canGo[end]);
+        return dp[end];
     }
+
 }
