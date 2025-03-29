@@ -2,13 +2,18 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static class Node{
+    static class Node implements Comparable<Node>{
         int node;
         int cost;
 
         Node(int node, int cost){
             this.node=node;
             this.cost=cost;
+        }
+
+        @Override
+        public int compareTo(Node o){
+            return this.cost - o.cost;
         }
     }
 
@@ -34,24 +39,41 @@ public class Main {
             tree[end].add(new Node(start, cost));
         }
 
-        max=-1;
-        for(int s=1;s<=n;s++){
-            visited=new boolean[n+1];
-            visited[s]=true;
-            dfs(n, tree, s, 0);
-        }
+        List<Integer> result = dijkstra(n, tree, 1);
+        int ans = dijkstra(n, tree, result.get(1)).get(0);
 
-        System.out.println(max);
+        System.out.println(ans);
     }
 
-    private static void dfs(int n, List<Node>[] tree, int curNode, int cost){
-        if(max<cost) max=cost;
+    private static List<Integer> dijkstra(int n, List<Node>[] tree, int start){
+        PriorityQueue<Node> pq=new PriorityQueue<>();
+        int[] dist = new int[n+1];
+        Arrays.fill(dist, 1_000_000_000);
 
-        for(Node next : tree[curNode]){
-            if(visited[next.node]) continue;
+        pq.add(new Node(start, 0));
+        dist[start]=0;
 
-            visited[next.node]=true;
-            dfs(n, tree, next.node, cost+next.cost);
+        while(!pq.isEmpty()){
+            Node cur =pq.poll();
+
+            for(Node next: tree[cur.node]){
+                if(dist[next.node]<=dist[cur.node]+next.cost) continue;
+                dist[next.node]=dist[cur.node]+next.cost;
+                pq.add(new Node(next.node, dist[next.node]));
+            }
         }
+        
+        int max=0;
+        int idx =start;
+        
+        for(int i=1;i<=n;i++){
+            if(i==start) continue;
+            if(max>=dist[i]) continue;
+
+            max=dist[i];
+            idx =i;
+        }
+        return Arrays.asList(max, idx);
+        
     }
 }
