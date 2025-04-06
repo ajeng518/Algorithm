@@ -81,9 +81,9 @@ public class Main{
 			if (dist[cur.v] < cur.cost)
 				continue;
 			
-//			if (chk[cur.v])
-//				continue;
-//			chk[cur.v] = true;
+			if (chk[cur.v])
+				continue;
+			chk[cur.v] = true;
 
 			for (Node next : list[cur.v]) {
 				if (dist[next.v] > dist[cur.v] + next.cost) {
