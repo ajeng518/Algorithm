@@ -1,0 +1,11 @@
+-- 코드를 작성해주세요
+SELECT DISTINCT(D.ID),
+        D.EMAIL,
+        D.FIRST_NAME,
+        D.LAST_NAME
+FROM DEVELOPERS D JOIN SKILLCODES S
+    ON (S.NAME LIKE 'C#' OR S.NAME LIKE 'Python')
+        AND ((D.SKILL_CODE & S.CODE) =S.CODE)
+# GROUP BY D.ID
+ORDER BY D.ID
+;
