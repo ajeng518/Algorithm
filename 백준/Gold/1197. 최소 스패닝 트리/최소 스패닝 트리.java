@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -6,68 +7,97 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-    static class Edge implements Comparable<Edge> {
-        int node;
-        int cost;
 
-        public Edge(int node, int cost) {
-            this.node = node;
-            this.cost = cost;
-        }
+	static class Node implements Comparable<Node> {
+		int s;
+		int e;
+		int cost;
 
-        @Override
-        public int compareTo(Edge o) {
-            return this.cost - o.cost;
-        }
+		public Node() {
+			super();
+		}
 
-    }
+		public Node(int s, int e, int cost) {
+			super();
+			this.s = s;
+			this.e = e;
+			this.cost = cost;
+		}
 
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+		@Override
+		public int compareTo(Node o) {
+			// TODO Auto-generated method stub
+			return Integer.compare(this.cost, o.cost);// 오름차순
+		}
 
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
-        List<Edge>[] nodeList = new List[n + 1];
-        for(int i=1;i<=n;i++) nodeList[i]=new ArrayList<>();
+	}
 
-        for (int i = 0; i < m; i++) {
-            st = new StringTokenizer(br.readLine());
-            int start = Integer.parseInt(st.nextToken());
-            int end = Integer.parseInt(st.nextToken());
-            int len = Integer.parseInt(st.nextToken());
+	static int V, E;
+	static int parent[], rank[];
+	static PriorityQueue<Node>pq;
 
-            nodeList[start].add(new Edge(end, len));
-            nodeList[end].add(new Edge(start, len));
-        }
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
 
-        System.out.println(prim(n, m, nodeList));
+		st = new StringTokenizer(br.readLine());
+		V = Integer.parseInt(st.nextToken());
+		E = Integer.parseInt(st.nextToken());
 
-    }
+		pq=new PriorityQueue<>();
+		parent = new int[V + 1];
+		rank = new int[V + 1];
 
-    private static long prim(int n, int m, List<Edge>[] list){
-        PriorityQueue<Edge> pq=new PriorityQueue<>();
-        pq.add(new Edge(1, 0));
-        boolean[] visited=new boolean[n+1];
-        long all=0;
-        int cnt=0;
+		for (int i = 0; i < E; i++) {
+			st = new StringTokenizer(br.readLine());
+			int s = Integer.parseInt(st.nextToken());
+			int e = Integer.parseInt(st.nextToken());
+			int cost = Integer.parseInt(st.nextToken());
+			pq.add(new Node(s, e, cost));
+		}
+		initial();
 
-        while(!pq.isEmpty()){
-            if(cnt==n)break;
+		int sum=0;
+		int cnt=0;
+		while(cnt!=V-1) {
+			Node n=pq.poll();
+			if(union(n.s, n.e)) {
+				cnt++;
+				sum+=n.cost;
+			}
+		}System.out.println(sum);
+	}
 
-            Edge cur=pq.poll();
+	private static boolean union(int x, int y) {
+		x = find(x);
+		y = find(y);
 
-            if(visited[cur.node]) continue;
+		if (x == y)
+			return false;
 
-            visited[cur.node]=true;
-            all+=cur.cost;
-            cnt++;
-            for(Edge next: list[cur.node]){
-                pq.add(next);
-            }
-        }
+		if (rank[x] < rank[y]) {
+			rank[y] += rank[x];
+			parent[x] = y;
+		} else {
+			rank[x] += rank[y];
+			parent[y] = x;
+		}
+		return true;
 
-        return all;
-    }
+	}
+
+	private static int find(int x) {
+		if (x == parent[x])
+			return parent[x];
+		else
+			return parent[x] = find(parent[x]);
+	}
+
+	private static void initial() {
+		for (int i = 1; i <= V; i++) {
+			parent[i] = i;
+			rank[i] = 1;
+		}
+	}
 
 }
