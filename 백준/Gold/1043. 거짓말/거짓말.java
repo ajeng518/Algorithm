@@ -2,83 +2,89 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static int[] parents;
-    static Set<Integer> trueKnown;
+    static int[] parent;
+    static Set<Integer> trueList;
     
     public static void main(String[] args) throws Exception {
         BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb=new StringBuilder();
-        
         StringTokenizer st=new StringTokenizer(br.readLine());
-        
-        int n =Integer.parseInt(st.nextToken());
-        int m =Integer.parseInt(st.nextToken());
-        int ans=0;
-        parents=new int[n+1];
-        for(int i=1;i<=n;i++) parents[i]=i;
 
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        int result=0;
+
+        parent=new int[n+1];
+        for(int i=1;i<=n;i++) parent[i]=i;
+
+        //trueList
         st=new StringTokenizer(br.readLine());
         int trueCnt=Integer.parseInt(st.nextToken());
+        
+        trueList=new HashSet<>();
+        
+        for(int i=0;i<trueCnt; i++){
+            trueList.add(Integer.parseInt(st.nextToken()));
+        }
 
-        if(trueCnt==0){
+        if(trueList.size()==0){
             System.out.println(m);
             System.exit(0);
         }
-
-        trueKnown =new HashSet<>();
-        while(trueCnt-- > 0){
-            trueKnown.add(Integer.parseInt(st.nextToken()));
-        }
-
-        List<Integer>[] partyList=new List[m];
-        for(int i=0;i<m;i++){
+        
+        //party List
+        List<Integer>[] partyList=new List[m+1];
+        
+        for(int i = 1; i <= m; i++){
             partyList[i]=new ArrayList<>();
             
             st=new StringTokenizer(br.readLine());
-            int joinCnt = Integer.parseInt(st.nextToken());
-            int x=Integer.parseInt(st.nextToken());
-            partyList[i].add(x);
+            
+            int cnt=Integer.parseInt(st.nextToken());
+            int join = Integer.parseInt(st.nextToken());
+            
+            partyList[i].add(join);
+            
+            for(int j=1; j<cnt; j++){
+                int cur = Integer.parseInt(st.nextToken());
 
-            while(--joinCnt > 0){
-               int cur=Integer.parseInt(st.nextToken());
-
-                union(x, cur);
+                union(join, cur);
                 partyList[i].add(cur);
             }
-            
         }
 
-        for(int i =0; i<m;i++){
-            boolean isTrueMan=false;
+        for(int i=1;i<=m;i++){
+            boolean trueMan=false;
 
-            for(int p : partyList[i]){
-                if(trueKnown.contains(find(parents[p]))){
-                    isTrueMan=true;
+            for(int person: partyList[i] ){
+                if(trueList.contains(find(parent[person]))){
+                    trueMan=true;
                     break;
                 }
             }
 
-            if(!isTrueMan) ans++;
+            if(trueMan) continue;
+
+            result++;
         }
 
-        System.out.println(ans);
-        
-    }
-
-    private static void union(int x, int y){
-        int px=find(x);
-        int py=find(y);
-
-        if(trueKnown.contains(py)){
-            int temp = px;
-            px=py;
-            py=temp;
-        }
-        parents[py]=px;
+        System.out.println(result);
     }
 
     private static int find(int x){
-        if(parents[x]==x) return x;
-        return find(parents[x]);
+        if(x == parent[x]) return parent[x];
+        return x=find(parent[x]);
+    }
+
+    private static void union(int x, int y){
+        int px = find(x);
+        int py = find(y);
+
+        if(trueList.contains(py)){
+            int temp=py;
+            py=px;
+            px=temp;
+        }
+
+        parent[py]=px;
     }
 }
