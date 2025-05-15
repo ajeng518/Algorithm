@@ -1,103 +1,68 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
+    static class Node implements Comparable<Node>{
+        int idx;
+        int cost;
 
-	static class Node implements Comparable<Node> {
-		int s;
-		int e;
-		int cost;
+        Node(int idx, int cost) {
+            this.idx=idx;
+            this.cost=cost;
+        }
 
-		public Node() {
-			super();
-		}
+        public int compareTo(Node o){
+            return this.cost-o.cost;
+        }
+    }
+    
+    public static void main(String[] args) throws Exception {
+        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st=new StringTokenizer(br.readLine());
 
-		public Node(int s, int e, int cost) {
-			super();
-			this.s = s;
-			this.e = e;
-			this.cost = cost;
-		}
+        int v = Integer.parseInt(st.nextToken());
+        int e = Integer.parseInt(st.nextToken());
 
-		@Override
-		public int compareTo(Node o) {
-			// TODO Auto-generated method stub
-			return Integer.compare(this.cost, o.cost);// 오름차순
-		}
+        List<Node>[] list=new List[v+1];
+        for(int i=1;i<=v;i++) list[i]=new ArrayList<>();
+        
+        for(int i=0;i<e;i++){
+            st=new StringTokenizer(br.readLine());
 
-	}
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            int cost=Integer.parseInt(st.nextToken());
+            
+            list[a].add(new Node(b, cost));
+            list[b].add(new Node(a, cost));
+        }
 
-	static int V, E;
-	static int parent[], rank[];
-	static PriorityQueue<Node>pq;
+        System.out.println(prim(v, e, list));
+        
+    }
+    
+    private static int prim(int v, int e, List<Node>[] list){
+        PriorityQueue<Node> pq=new PriorityQueue<>();
+        pq.add(new Node(1, 0));
+        
+        boolean[] visited=new boolean[v+1];
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
+        int cnt=0;
 
-		st = new StringTokenizer(br.readLine());
-		V = Integer.parseInt(st.nextToken());
-		E = Integer.parseInt(st.nextToken());
+        while(!pq.isEmpty()){
+            Node cur=pq.poll();
 
-		pq=new PriorityQueue<>();
-		parent = new int[V + 1];
-		rank = new int[V + 1];
+            if(visited[cur.idx]) continue;
+            visited[cur.idx]=true;
+            cnt+=cur.cost;
 
-		for (int i = 0; i < E; i++) {
-			st = new StringTokenizer(br.readLine());
-			int s = Integer.parseInt(st.nextToken());
-			int e = Integer.parseInt(st.nextToken());
-			int cost = Integer.parseInt(st.nextToken());
-			pq.add(new Node(s, e, cost));
-		}
-		initial();
+            for(Node next: list[cur.idx]){
+                if(visited[next.idx]) continue;
 
-		int sum=0;
-		int cnt=0;
-		while(cnt!=V-1) {
-			Node n=pq.poll();
-			if(union(n.s, n.e)) {
-				cnt++;
-				sum+=n.cost;
-			}
-		}System.out.println(sum);
-	}
+                pq.add(next);
+            }
+        }
 
-	private static boolean union(int x, int y) {
-		x = find(x);
-		y = find(y);
-
-		if (x == y)
-			return false;
-
-		if (rank[x] < rank[y]) {
-			rank[y] += rank[x];
-			parent[x] = y;
-		} else {
-			rank[x] += rank[y];
-			parent[y] = x;
-		}
-		return true;
-
-	}
-
-	private static int find(int x) {
-		if (x == parent[x])
-			return parent[x];
-		else
-			return parent[x] = find(parent[x]);
-	}
-
-	private static void initial() {
-		for (int i = 1; i <= V; i++) {
-			parent[i] = i;
-			rank[i] = 1;
-		}
-	}
-
+        return cnt;
+    }
 }
