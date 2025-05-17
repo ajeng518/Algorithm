@@ -1,80 +1,72 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-	static boolean[][] chk;
-	static int flag, n, m;
-	static int[][] go;
-	static char[][] map;
-	static ArrayDeque<int[]> q = new ArrayDeque<>();
+    static boolean[][]visited;
+    static int[] dx={1, 0, -1, 0};
+    static int[] dy={0, 1, 0, -1};
+    
+    public static void main(String[] args) throws Exception {
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st=new StringTokenizer(br.readLine());
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb=new StringBuilder();	
+        int n =Integer.parseInt(st.nextToken());//
+        int m = Integer.parseInt(st.nextToken());//
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken());
-		m = Integer.parseInt(st.nextToken());
+       char[][] map=new char[m][n];
+        for(int i=0;i<m;i++){
+            map[i]=br.readLine().toCharArray();
+        }
+        
+        int[] ans=new int[2];
+        visited=new boolean[m][n];
+        
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(visited[i][j]) continue;
+                
+                int[] cur=bfs(m, n, map, i, j, map[i][j]);
+                ans[0]+=cur[0];
+                ans[1]+=cur[1];
+            }
+        }
 
-		map = new char[m][n];
-		for (int i = 0; i < m; i++) {
-			map[i] = br.readLine().toCharArray();
-		}
+        System.out.println(ans[0]+" "+ans[1]);
+        
+    }
 
-		int[] color = new int[2];
-		go = new int[][] { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+    private static int[] bfs(int m, int n, char[][] map, int sx, int sy, char target){
+        Deque<int[]> q=new ArrayDeque<>();
+        q.add(new int[]{sx, sy});
 
-		chk = new boolean[m][n];
-		
-		for (int i = 0; i < m; i++) {
-			for (int j = 0; j < n; j++) {
-				
-				if (chk[i][j])
-					continue;
-				
-				int count=bfs(i, j, 0, map[i][j]);
-				
-				if(map[i][j]=='B') {
-					color[1]+=count*count;
-				}else {
-					color[0]+=count*count;
-				}
-				
-			}
-		}
-		sb.append(color[0]+" ");
-		sb.append(color[1]);
-		System.out.println(sb.toString());
+        visited[sx][sy]=true;
+        int cnt=0;
 
-	}
+        while(!q.isEmpty()){
+            int[] cur = q.poll();
+            cnt++;
 
-	private static int bfs(int i, int j, int cnt, char flag) {
-		q.offer(new int[] {i,j});
-		chk[i][j]=true;
-		
-		while(!q.isEmpty()) {
-			int[]temp=q.poll();
-			cnt++;
-			
-			for (int w = 0; w < 4; w++) {
-				int x = temp[0] + go[w][0];
-				int y = temp[1] + go[w][1];
-				if (checking(x, y, flag)) {
-					q.offer(new int[] {x,y});
-					chk[x][y]=true;
-				}
-			}
-		}
-		return cnt;
-	}
+            for(int i=0;i<4;i++){
+                int nx=cur[0]+dx[i];
+                if(nx<0 || nx>=m) continue;
 
-	private static boolean checking(int x, int y, char flag) {
-		return (x >= 0 && y >= 0 && x < m && y < n && chk[x][y] == false && map[x][y] == flag );
-		
-	}
+                int ny=cur[1]+dy[i];
+                if(ny<0 || ny>=n) continue;
 
+                if(map[nx][ny]!= target) continue;
+                if(visited[nx][ny]) continue;
+
+                q.add(new int[]{nx, ny});
+                visited[nx][ny]=true;
+            }
+        }
+
+        cnt*=cnt;
+        
+        if(target=='W'){
+            return new int[]{cnt, 0};
+        }else{
+            return new int[]{0, cnt};
+        }
+    }
 }
