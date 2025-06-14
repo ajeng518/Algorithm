@@ -49,18 +49,20 @@ public class Main {
 
 		while (!q.isEmpty()) {
 			int size = q.size();
-			while (--size >= 0) {
+			while (size-- > 0) {
 				int[] now = q.poll();
 				cnt++;
 
 				for (int i = 0; i < 4; i++) {
 					int nextX = now[0] + dx[i];
+                    if (nextX < 0 || nextX >= N ) continue;
+                    
 					int nextY = now[1] + dy[i];
-					
-					if (nextX < 0 || nextX >= N || nextY < 0 || nextY >= M)
-						continue;
+					if(nextY < 0 || nextY >= M)	continue;
+                    
 					if (chk[nextX][nextY] || !map[nextX][nextY])
 						continue;
+                    
 					q.offer(new int[] { nextX, nextY });
 					chk[nextX][nextY] = true;
 				}
@@ -68,5 +70,4 @@ public class Main {
 		}
 		return cnt;
 	}
-
 }
