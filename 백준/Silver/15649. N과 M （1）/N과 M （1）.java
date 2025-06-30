@@ -2,47 +2,45 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-   	static int n, m;
-	static List<Integer>list;
-	static int[] chk;
-	
-	static void re(int x) {
-		
-		if(x==m) {
-			print_num();
-			return;
-		}
-		
-		for(int i=1;i<=n;i++) {
-			if(chk[i]!=1) {
-				list.add(i);
-				chk[i]=1;
+    static int n, m;
+    static int[] arr;
+    static boolean[] visited;
+    static StringBuilder sb;
+    
+    public static void main(String[] args) throws Exception {
+        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st=new StringTokenizer(br.readLine());
+        sb=new StringBuilder();
 
-				re(x+1);
-				
-				chk[i]=0;
-				list.remove(list.size()-1);
-			}
-		}
-	}
-	private static void print_num() {
-		for(int i=0;i<list.size();i++) {
-			System.out.print(list.get(i)+" ");
-		}
+        n = Integer.parseInt(st.nextToken());
+        m= Integer.parseInt(st.nextToken());
         
-        System.out.println();
-	}
-	
-	public static void main(String[] args) throws IOException {
-		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st=new StringTokenizer(br.readLine());
-		
-		n=Integer.parseInt(st.nextToken());
-		m=Integer.parseInt(st.nextToken());
+        arr=new int[m];
+        visited=new boolean[n+1];
+        re(0);
+
+        System.out.println(sb);
         
-		chk=new int[n+1];
-        list=new ArrayList<>();
-		
-		re(0);
-	}
+    }
+    
+    private static void re(int cnt){
+        if(cnt==m){
+            String curNum="";
+            for(int i=0;i<m;i++){
+                curNum+=arr[i];
+                curNum+=" ";
+            }
+
+            sb.append(curNum).append("\n");
+            return;
+        }
+
+        for(int i=1; i<=n;i++){
+            if(visited[i]) continue;
+            arr[cnt]=i;
+            visited[i]=true;
+            re(cnt+1);
+            visited[i]=false;
+        }
+    }
 }
