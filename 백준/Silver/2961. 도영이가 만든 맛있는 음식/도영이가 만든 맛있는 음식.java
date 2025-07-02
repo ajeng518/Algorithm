@@ -1,50 +1,53 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-	static int n, min;
-	static int[] result;
-	static int[][]taste;
-	static boolean[] used;
-	
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-		
-		n=Integer.parseInt(br.readLine());
-		taste=new int[n][2];
-		used=new boolean[n];
-		min=Integer.MAX_VALUE;
-        
-		for(int i=0;i<n;i++) {
-			StringTokenizer st=new StringTokenizer(br.readLine());
-			taste[i][0]=Integer.parseInt(st.nextToken());
-			taste[i][1]=Integer.parseInt(st.nextToken());
-		}
-		dfs(0,0);
-        
-		System.out.println(min);
-	}
-	
-	public static void dfs(int now, int cnt) {
-		if(now==n) {
-			if(cnt>0) {
-				result= new int[]{1, 0};
-				for(int i=0;i<used.length;i++) {
-					if(used[i]) {
-						result[0]*=taste[i][0];
-						result[1]+=taste[i][1];
-					}
-				}
-                min=Math.min(min, Math.abs(result[0] - result[1]));
-			}
+    static boolean[] visited;
+    static int n, min;
+    static int[][] food;
+    
+    public static void main(String[] args) throws Exception {
+        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        n = Integer.parseInt(br.readLine());
+        food=new int[n][2];
+
+        for(int i=0;i<n;i++){
+            st=new StringTokenizer(br.readLine());
+            food[i][0]=Integer.parseInt(st.nextToken());
+            food[i][1]=Integer.parseInt(st.nextToken());
+        }
+
+        visited=new boolean[n+1];
+        min=Integer.MAX_VALUE;
+        dfs(0, 0);
+
+        System.out.println(min);
+    }
+
+    private static void dfs(int now, int cnt){
+        if(now==n){
+            if(cnt==0) return;
+            
+            int salt=0;//+
+            int sour=1;//*
+            
+            for(int i=0;i<n;i++){
+                if(!visited[i]) continue;
+                
+                salt+=food[i][1];
+                sour*=food[i][0];
+            }
+            
+            min = min > Math.abs(sour-salt) ? Math.abs(sour-salt) : min;
+
             return;
-		}
-		
-		used[now]=true;
-		dfs(now+1,cnt+1);
-		used[now]=false;
-		dfs(now+1,cnt);
-	}
+        }
+
+        visited[now]=true;
+        dfs(now+1, cnt+1);
+        visited[now]=false;
+        dfs(now+1, cnt);
+    }
 }
