@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,8 +33,10 @@ public class Main {
 				for(int k=0;k<2;k++) {
 					int x=i+turn[k][0]*temp;
 					int y=j+turn[k][1]*temp;
-					if(checking(x, y))
-						result[x][y]+=result[i][j];
+                    
+					if(!checking(x, y)) continue;
+                    
+					result[x][y]+=result[i][j];
 				}
 			}
 		}
