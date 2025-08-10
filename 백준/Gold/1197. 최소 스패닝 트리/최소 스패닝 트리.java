@@ -2,65 +2,92 @@ import java.util.*;
 import java.io.*;
 
 public class Main{
-    static class Node implements Comparable<Node>{
-        int node;
-        int cost;
+    static int v, e;
+    static int[] parent,rank;
 
-        Node(int node, int cost){
-            this.node=node;
-            this.cost=cost;
-        }
+    static class Node implements Comparable<Node> {
+		int s;
+		int e;
+		int cost;
 
-        @Override
-        public int compareTo(Node o){
-            return this.cost-o.cost;
-        }
-    }
+		public Node() {
+			super();
+		}
+
+		public Node(int s, int e, int cost) {
+			super();
+			this.s = s;
+			this.e = e;
+			this.cost = cost;
+		}
+
+		@Override
+		public int compareTo(Node o) {
+			// TODO Auto-generated method stub
+			return Integer.compare(this.cost, o.cost);// 오름차순
+		}
+
+	}
     
     public static void main(String args[]) throws Exception{
          BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
          StringTokenizer st=new StringTokenizer(br.readLine());
 
-        int v= Integer.parseInt(st.nextToken());
-        int e= Integer.parseInt(st.nextToken());
+        int answer=0;
 
-        List<Node>[] nodeList=new List[v+1];
+        v= Integer.parseInt(st.nextToken());
+        e= Integer.parseInt(st.nextToken());
+
+        parent = new int[v+1];
+        rank =new int[v+1];
+        
+        for(int i=1;i<=v;i++){
+            parent[i]=i;
+            rank[i]=1;
+        } 
+
+        PriorityQueue<Node>pq=new PriorityQueue<>();
+        
         for(int i=1;i<=e;i++){
             st=new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
             int cost = Integer.parseInt(st.nextToken());
             
-            if(nodeList[a]==null){
-                nodeList[a]=new ArrayList<>();
-            }
-            nodeList[a].add(new Node(b, cost));
+            pq.add(new Node(a, b, cost));
+        }
+        
+        int cnt=0;
+        
+		while(cnt!=v-1) {
+			Node n=pq.poll();
+            
+			if(union(n.s, n.e)) {
+				cnt++;
+				answer+=n.cost;
+			}
+		}
 
-            if(nodeList[b]==null){
-                nodeList[b]=new ArrayList<>();
-            }
-            nodeList[b].add(new Node(a, cost));
+         
+        System.out.println(answer);
+    }
+    private static boolean union(int a, int b){
+        int ax=find(a);
+        int by=find(b);
+
+        if(ax==by) return false;
+        if(rank[ax]< rank[by]){
+            rank[by]+=rank[ax];
+            parent[ax]=by;
+        }else {
+            rank[ax]+=rank[by];
+            parent[by]=ax;
         }
 
-         PriorityQueue<Node> pq=new PriorityQueue<>();
-            pq.add(new Node(1, 0));
-            boolean[] visited=new boolean[v+1];
-    
-            int answer=0;
-            while(!pq.isEmpty()){
-                Node cur = pq.poll();
-    
-                if(visited[cur.node]) continue;
-                
-                answer+=cur.cost;
-                visited[cur.node]=true;
-    
-                for(Node next: nodeList[cur.node]){
-                    if(visited[next.node]) continue;
-    
-                    pq.add(next);
-                }
-            }
-        System.out.println(answer);
+        return true;
+    }
+    private static int find(int a){
+        if(a ==parent[a]) return a;
+        else return find(parent[a]);
     }
 }
