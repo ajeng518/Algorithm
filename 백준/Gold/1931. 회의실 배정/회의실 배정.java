@@ -1,47 +1,44 @@
 import java.util.*;
 import java.io.*;
-
-public class Main {
+public class Main{
     static class Meeting implements Comparable<Meeting>{
-        int startT;
-        int endT;
+        int start;
+        int end;
 
-        Meeting(int startT, int endT){
-            this.startT=startT;
-            this.endT=endT;
+        Meeting(int start, int end){
+            this.start=start;
+            this.end=end;
         }
-
+        
+        @Override
         public int compareTo(Meeting o){
-            if(this.endT== o.endT)
-                return this.startT-o.startT;
-            return this.endT-o.endT;
+            if(o.end == this.end)
+                return this.start-o.start;
+            return this.end-o.end;
         }
+        
     }
-    
-    public static void main(String[] args) throws Exception {
+    public static void main(String args[]) throws Exception{
         BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
 
-        int n =Integer.parseInt(br.readLine());
+        int n = Integer.parseInt(br.readLine());
         
-        Meeting[] schedule=new Meeting[n];
+        Meeting[] meetingArr=new Meeting[n];
         for(int i=0;i<n;i++){
             st=new StringTokenizer(br.readLine());
-            int s=Integer.parseInt(st.nextToken());
-            int e=Integer.parseInt(st.nextToken());
-
-            schedule[i]=new Meeting(s, e);
+            meetingArr[i]=new Meeting(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
         }
 
-        Arrays.sort(schedule);
-
+        Arrays.sort(meetingArr);
+        
         int cnt=0;
-        int lastEndTime=0;
+        int now=0;
+        
         for(int i=0;i<n;i++){
-            if(lastEndTime > schedule[i].startT) continue;
-
-            lastEndTime=schedule[i].endT;
+            if(meetingArr[i].start < now) continue;
             cnt++;
+            now=meetingArr[i].end;
         }
 
         System.out.println(cnt);
