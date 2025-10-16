@@ -8,17 +8,14 @@ public class Main {
 
         int[] dp=new int[n+4];
         dp[0]=1;
+        dp[2]=1;
+        dp[3]=1;
 
 
-        for(int i =2;i<=n;i++){
-                dp[i]+=dp[i-2];
-
-            if(i-3 >= 0)
-                dp[i]+=dp[i-3];
-                
-            dp[n]%=10007;
+        for(int i =4;i<=n;i++){
+            dp[i]=(dp[i-2]+dp[i-3]) % 10007;
         }
 
-        System.out.println(dp[n]);
+        System.out.println(dp[n]%10007);
     }
 }
