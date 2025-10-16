@@ -11,14 +11,11 @@ public class Main {
 
 
         for(int i =2;i<=n;i++){
-            if(i-2 < 0) continue;
-            if(dp[i-2] > 0)
                 dp[i]+=dp[i-2];
 
-            if(i-3 < 0) continue;    
-            if(dp[i-3] > 0){
+            if(i-3 >= 0)
                 dp[i]+=dp[i-3];
-            }
+                
             dp[n]%=10007;
         }
 
