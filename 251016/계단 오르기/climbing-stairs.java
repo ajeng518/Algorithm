@@ -8,11 +8,15 @@ public class Main {
         int[] dp=new int[n+1];
         if(n>=2)
             dp[2]=1;
-        dp[3]=1;
+        if(n>=3)    
+            dp[3]=1;
 
         for(int i =4;i<=n;i++){
-            dp[i]+=dp[i-2]+1;
-            dp[i]+=dp[i-3]+1;
+            if(dp[i-2] > -1)
+                dp[i]+=dp[i-2];
+            if(dp[i-3] > -1){
+                dp[i]+=dp[i-3];
+            }
         }
 
         System.out.println(dp[n]);
