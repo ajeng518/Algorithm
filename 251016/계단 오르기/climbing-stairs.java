@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.*;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -6,15 +6,16 @@ public class Main {
         // Please write your code here.
 
         int[] dp=new int[n+1];
-        if(n>=2)
-            dp[2]=1;
-        if(n>=3)    
-            dp[3]=1;
+        dp[0]=1;
 
-        for(int i =4;i<=n;i++){
-            if(dp[i-2] > -1)
+
+        for(int i =2;i<=n;i++){
+            if(i-2 < 0) continue;
+            if(dp[i-2] > 0)
                 dp[i]+=dp[i-2];
-            if(dp[i-3] > -1){
+
+            if(i-3 < 0) continue;    
+            if(dp[i-3] > 0){
                 dp[i]+=dp[i-3];
             }
         }
