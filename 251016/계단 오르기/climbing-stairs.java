@@ -19,8 +19,9 @@ public class Main {
             if(dp[i-3] > 0){
                 dp[i]+=dp[i-3];
             }
+            dp[n]%=10007;
         }
 
-        System.out.println(dp[n]%10007);
+        System.out.println(dp[n]);
     }
 }
