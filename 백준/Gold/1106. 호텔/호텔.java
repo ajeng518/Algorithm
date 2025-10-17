@@ -1,44 +1,38 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
-public class Main {
-    static final int INF = 1000000;
-
-    public static void main(String[] args) throws Exception {
+public class Main{
+    public static void main(String args[]) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int c = Integer.parseInt(st.nextToken()); //인원수
-        int n = Integer.parseInt(st.nextToken());//홍보 경우의 수
+        int c = Integer.parseInt(st.nextToken());
+        int n = Integer.parseInt(st.nextToken());
 
-        int[] cost = new int[n];
-        int[] value = new int[n];
-        for (int i = 0; i < n; i++) {
+        int[] dp= new int[1101];
+        Arrays.fill(dp, 1000000);
+        dp[0]=0;
+
+        int[] w=new int[n+1];
+        int[] v=new int[n+1];
+        
+        for(int i=1;i<=n;i++){
             st = new StringTokenizer(br.readLine());
-
-            cost[i] = Integer.parseInt(st.nextToken());
-            value[i] = Integer.parseInt(st.nextToken());
+            w[i]=Integer.parseInt(st.nextToken());
+            v[i]=Integer.parseInt(st.nextToken());
         }
 
-        int[] dp = new int[1100];
-        Arrays.fill(dp, INF);
-        dp[0] = 0;
-
-
-        for (int j = 0; j < n; j++) {
-            for (int i = 1; i < 1100; i++) {
-                if (i - value[j] < 0) continue;
-
-                dp[i] = Math.min(dp[i - value[j]] + cost[j], dp[i]);
+        for(int i=1;i<=n;i++){
+            for(int j=v[i];j<=1100;j++){
+                dp[j]=Math.min(dp[j], dp[j-v[i]]+w[i]);
             }
         }
 
-        int ans = dp[c];
-
-        for (int i = c + 1; i < 1100; i++)
-            ans = Math.min(ans, dp[i]);
+        int ans=Integer.MAX_VALUE;
+        
+        for(int i=c;i<=1100;i++){
+            ans=Math.min(ans, dp[i]);
+        }
 
         System.out.println(ans);
     }
