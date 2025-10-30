@@ -1,0 +1,12 @@
+-- 코드를 입력하세요
+SELECT DISTINCT(AO.CART_ID)
+FROM (SELECT A.ID, A.CART_ID, A.NAME, A.PRICE
+        FROM CART_PRODUCTS A
+        WHERE NAME LIKE 'Yogurt%'
+     ) AO
+     JOIN (SELECT B.ID, B.CART_ID, B.NAME, B.PRICE
+            FROM CART_PRODUCTS B
+           WHERE NAME LIKE 'Milk%'
+     ) BO ON AO.CART_ID = BO.CART_ID
+
+;
