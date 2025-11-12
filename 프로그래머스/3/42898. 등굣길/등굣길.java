@@ -27,7 +27,7 @@ class Solution {
             }
         }
         
-        answer=dp[n-1][m-1]%MOD;
+        answer = dp[n-1][m-1] % MOD;
         
         return answer;
     }
