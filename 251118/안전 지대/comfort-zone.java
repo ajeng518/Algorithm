@@ -24,9 +24,11 @@ public class Main {
         
         int max = 0;
         int k =0;
-        int maxK=0;
+        int maxK=1;
 
         while(++k <= maxHigh){
+            // System.out.println("start: "+k+"  ================");
+            
             int cur=0;
             visited=new boolean[n][m];
 
@@ -34,6 +36,8 @@ public class Main {
                 for(int j=0;j<m;j++){
                     if(visited[i][j]) continue;
                     if(grid[i][j] <= k) continue;
+
+                    // System.out.println("k: "+k+", i: "+i+", j: "+j);
 
                     visited[i][j]=true;
                     dfs(i, j, k);
