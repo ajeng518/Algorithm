@@ -22,11 +22,11 @@ public class Main {
             }
         }
         
-        int max = 1;
-        int k =1;
-        int maxK=1;
+        int max = 0;
+        int k =0;
+        int maxK=0;
 
-        while(k++ < maxHigh){
+        while(++k <= maxHigh){
             int cur=0;
             visited=new boolean[n][m];
 
