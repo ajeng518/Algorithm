@@ -1,4 +1,3 @@
--- 코드를 작성해주세요
 SELECT A.ID
 FROM (SELECT ID,
             PARENT_ID
