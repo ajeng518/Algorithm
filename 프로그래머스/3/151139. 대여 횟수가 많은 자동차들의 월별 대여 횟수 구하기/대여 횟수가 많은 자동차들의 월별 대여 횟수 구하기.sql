@@ -1,4 +1,3 @@
-# -- 코드를 입력하세요
 SELECT MONTH(A.START_DATE) AS MONTH,
         A.CAR_ID,
         COUNT(*) AS RECORDS
@@ -14,6 +13,3 @@ GROUP BY MONTH(A.START_DATE), A.CAR_ID
 HAVING COUNT(*) > 0
 ORDER BY MONTH ASC, A.CAR_ID DESC                                  
 ;
-
-                
-    
