@@ -28,7 +28,6 @@ public class Main {
         }
 
         melt= new ArrayList<>();
-        visited = new boolean[n][m];
 
         System.out.println(process()+" "+lastSize);
 
@@ -36,13 +35,20 @@ public class Main {
 
     private static int process(){
         int time=0;
-        lastSize =iceCnt;
+        lastSize =0;
 
         while(iceCnt > 0){
             lastSize =iceCnt;
+            visited = new boolean[n][m];
 
             findWater();
             meltIce();
+
+            for(int[] cur : melt){
+                grid[cur[0]][cur[1]]=0;
+                iceCnt--;
+            }
+            melt=new ArrayList<>();
 
             time++;
         }
@@ -84,14 +90,9 @@ public class Main {
                if(!isMelting(i, j)) continue;
 
                 melt.add(new int[]{i, j});
-                iceCnt--;
             }
         }
 
-        for(int[] cur : melt){
-            visited[cur[0]][cur[1]]=true;
-            grid[cur[0]][cur[1]]=0;
-        }
     }
     private static boolean isMelting(int x, int y){
         for(int d=0; d<4; d++){
