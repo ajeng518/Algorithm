@@ -53,33 +53,14 @@ public class Main {
     }
 
     private static void findWater(){
-        for(int i=0;i<n;i++){
-            if(i==0 || i==n-1){
-                for(int j=1;j<m-1;j++){
-                    q.add(new int[]{i, j});
-                    water.add(new int[]{i, j});
-                    visited[i][j]=true;
-                    
-                }
-                continue;
-            }
-            q.add(new int[]{i, 0});
-            q.add(new int[]{i, m-1});
-
-            water.add(new int[]{i, 0});
-            water.add(new int[]{i, m-1});
-
-            visited[i][0]=true;
-            visited[i][m-1]=true;
-        }
-
-        visited[0][0]=true;
-        visited[0][m-1]=true;
-        visited[n-1][0]=true;
-        visited[n-1][m-1]=true;
+        q.add(new int[]{0, 0});
+        q.add(new int[]{0, m-1});
+        q.add(new int[]{n-1, 0});
+        q.add(new int[]{n-1, m-1});
 
         while(!q.isEmpty()){
             int[] cur = q.poll();
+            water.add(new int[]{cur[0], cur[1]});
 
             for(int i=0;i<4;i++){
                 int nx = cur[0] + dx[i];
@@ -93,7 +74,7 @@ public class Main {
 
                 q.add(new int[]{nx, ny});
                 visited[nx][ny]=true;
-                water.add(new int[]{nx, ny});
+                
             }
         }
 
