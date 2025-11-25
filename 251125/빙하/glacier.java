@@ -81,20 +81,10 @@ public class Main {
             for(int j=0;j<m;j++){
                 if(grid[i][j]==0) continue;
 
-                for(int d=0; d<4; d++){
-                    int nx = i + dx[d];
-                    if(nx <0 || nx>= n) continue;
+               if(!isMelting(i, j)) continue;
 
-                    int ny = j + dy[d];
-                    if(ny<0 || ny>= m) continue;
-
-                    if(grid[nx][ny]==1) continue;
-                    if(!visited[nx][ny]) continue;
-
-                    melt.add(new int[]{nx, ny});
-                    iceCnt--;
-                    break;
-                }
+                melt.add(new int[]{i, j});
+                iceCnt--;
             }
         }
 
@@ -103,5 +93,21 @@ public class Main {
             grid[cur[0]][cur[1]]=0;
         }
     }
-        
+    private static boolean isMelting(int x, int y){
+        for(int d=0; d<4; d++){
+            int nx = x + dx[d];
+            if(nx <0 || nx>= n) continue;
+
+            int ny = y + dy[d];
+            if(ny<0 || ny>= m) continue;
+
+            if(grid[nx][ny]==1) continue;
+            if(!visited[nx][ny]) continue;
+
+            
+            return true;
+        }
+
+        return false;
+    }
 }
