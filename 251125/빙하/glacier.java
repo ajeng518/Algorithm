@@ -6,9 +6,8 @@ public class Main {
 
     static int n, m, iceCnt, lastSize;
     static int[][] grid;
-    static List<int[]> water;
+    static List<int[]> melt;
     static boolean[][] visited;
-    static Deque<int[]> q;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -16,8 +15,6 @@ public class Main {
         m = sc.nextInt();
 
         iceCnt=0;
-        water= new ArrayList<>();
-        visited = new boolean[n][m];
 
         grid = new int[n][m];
         for (int i = 0; i < n; i++){
@@ -30,6 +27,9 @@ public class Main {
             }
         }
 
+        melt= new ArrayList<>();
+        visited = new boolean[n][m];
+
         System.out.println(process()+" "+lastSize);
 
     }
@@ -38,14 +38,12 @@ public class Main {
         int time=0;
         lastSize =iceCnt;
 
-        q=new ArrayDeque<>();
-        findWater();
-
         while(iceCnt > 0){
             lastSize =iceCnt;
-            
+
+            findWater();
             meltIce();
-            
+
             time++;
         }
 
@@ -53,14 +51,13 @@ public class Main {
     }
 
     private static void findWater(){
+        Deque<int[]> q=new ArrayDeque<>();
+
         q.add(new int[]{0, 0});
-        q.add(new int[]{0, m-1});
-        q.add(new int[]{n-1, 0});
-        q.add(new int[]{n-1, m-1});
+        visited[0][0]=true;
 
         while(!q.isEmpty()){
             int[] cur = q.poll();
-            water.add(new int[]{cur[0], cur[1]});
 
             for(int i=0;i<4;i++){
                 int nx = cur[0] + dx[i];
@@ -77,40 +74,34 @@ public class Main {
                 
             }
         }
-
-        q=new ArrayDeque<>();
-        for(int[] wat : water){
-            q.add(new int[]{wat[0], wat[1]});
-        }
     }
 
     private static void meltIce(){
-        while(!q.isEmpty()){
-            int size = q.size();
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]==0) continue;
 
-            while(size-- > 0){
-                int[] cur = q.poll();
-
-                if(iceCnt == 0) break;
-
-                for(int i=0;i<4;i++){
-                    int nx = cur[0]+dx[i];
+                for(int d=0; d<4; d++){
+                    int nx = i + dx[d];
                     if(nx <0 || nx>= n) continue;
 
-                    int ny = cur[1]+dy[i];
+                    int ny = j + dy[d];
                     if(ny<0 || ny>= m) continue;
 
-                    if(visited[nx][ny]) continue;
-                    if(grid[nx][ny]==0) continue;
+                    if(grid[nx][ny]==1) continue;
+                    if(!visited[nx][ny]) continue;
 
-                    visited[nx][ny]=true;
-                    grid[nx][ny] = 0;
-                    
+                    melt.add(new int[]{nx, ny});
                     iceCnt--;
-                    q.add(new int[]{nx, ny});
+                    break;
                 }
             }
-            break;
+        }
+
+        for(int[] cur : melt){
+            visited[cur[0]][cur[1]]=true;
+            grid[cur[0]][cur[1]]=0;
         }
     }
+        
 }
