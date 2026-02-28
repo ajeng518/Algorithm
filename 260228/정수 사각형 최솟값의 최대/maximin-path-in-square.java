@@ -10,38 +10,28 @@ public class Main {
             }
         }
         // Please write your code here.
-        int answer = bfs(n, matrix);
-        System.out.println(answer);
-    }
-    
-    static int[] dx={0, 1};
-    static int[] dy={1, 0};
+        int[][] dp= new int[n][n]; 
+        dp[0][0] = matrix[0][0];
 
-    private static int bfs(int n, int[][] matrix){
-        Deque<int[]> q = new ArrayDeque<>();
-        q.add(new int[]{0, 0, matrix[0][0]});
-        int max = 0;
+        // 첫 열
+        for (int i = 1; i < n; i++) {
+            dp[i][0] = Math.min(dp[i-1][0], matrix[i][0]);
+        }
 
-        while(!q.isEmpty()){
+        // 첫 행
+        for (int j = 1; j < n; j++) {
+            dp[0][j] = Math.min(dp[0][j-1], matrix[0][j]);
+        }
 
-            int[] cur = q.poll();
-
-            if(cur[0]==n-1 && cur[1]==n-1){
-                max = Math.max(max, cur[2]);
-                continue;
-            }
-
-            for(int i=0; i<2;i++){
-                int nx = cur[0]+dx[i];
-                if(nx < 0 || nx>= n) continue;
-
-                int ny = cur[1]+dy[i];
-                if(ny < 0 || ny>= n) continue;
-
-                q.add(new int[]{nx, ny, Math.min(cur[2], matrix[nx][ny])});
+        // 나머지
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j < n; j++) {
+                int fromTop = Math.min(dp[i-1][j], matrix[i][j]);
+                int fromLeft = Math.min(dp[i][j-1], matrix[i][j]);
+                dp[i][j] = Math.max(fromTop, fromLeft);
             }
         }
 
-        return max;
+        System.out.println(dp[n-1][n-1]);
     }
 }
