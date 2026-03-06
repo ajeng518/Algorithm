@@ -17,7 +17,7 @@ public class Main {
         for(int i=1; i<=m; i++){
             for(int j=1; j<=n; j++){
                 if(coin[j] > i) continue;
-                if(i-coin[j]==10001) continue;
+                if(dp[i-coin[j]]==10001) continue;
 
                 dp[i]=Math.min(dp[i], dp[i-coin[j]] + 1);
             }
