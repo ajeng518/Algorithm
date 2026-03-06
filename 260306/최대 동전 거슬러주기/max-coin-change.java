@@ -13,16 +13,16 @@ public class Main {
         int[] dp= new int[m+1];
         Arrays.fill(dp, -1);
         dp[0]=0;
-        
-        for(int i=1;i<=m;i++){
-            for(int j=0; j<n;j++){
-                if(i < coin[j]) continue;
 
+        for(int i=1;i<=m;i++){
+            for(int j=0; j<n; j++){
+                if(i < coin[j]) continue;
+                if(dp[i-coin[j]]==-1) continue;
+                
                 dp[i]=Math.max(dp[i], dp[i-coin[j]] + 1);
             }
         }
 
-        if(dp[m]==0)dp[m]=-1;
         System.out.println(dp[m]);
     }
 }
