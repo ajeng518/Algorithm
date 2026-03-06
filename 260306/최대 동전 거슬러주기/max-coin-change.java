@@ -19,6 +19,7 @@ public class Main {
             }
         }
 
+        if(dp[m]==0)dp[m]=-1;
         System.out.println(dp[m]);
     }
 }
