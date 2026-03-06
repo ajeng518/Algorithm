@@ -22,7 +22,8 @@ public class Main {
                 dp[i]=Math.min(dp[i], dp[i-coin[j]] + 1);
             }
         }
-
+        
+        if(dp[m]==10001) dp[m]=-1;
         System.out.println(dp[m]);
 
     }
