@@ -1,0 +1,17 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        int[] weight = new int[n+1];
+        int[] value = new int[n+1];
+        for (int i = 1; i <= n; i++) {
+            weight[i] = sc.nextInt();
+            value[i] = sc.nextInt();
+        }
+
+        int[][] dp=new int[n+1][m+1];
+    }
+}
