@@ -33,13 +33,9 @@ public class Main {
         String answer="No";
         int ans=Integer.MAX_VALUE;
 
-        for(int i=0; i<=sum/2+1; i+=2){
-            if(dp[i]>=101) continue;
-            if(dp[i] == 0) continue;
-            ans=Math.min(i, ans);
-        }
+        if(dp[sum/2] < 101) answer="Yes"; 
 
-        if(ans < Integer.MAX_VALUE) answer="Yes"; 
+        // if(ans < Integer.MAX_VALUE) 
         System.out.println(answer);
 
     }
