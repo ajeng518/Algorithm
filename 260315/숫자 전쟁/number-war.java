@@ -16,16 +16,16 @@ public class Main {
         for(int i=0;i<=n;i++) Arrays.fill(dp[i], -1);
         dp[0][0]=0;
 
-        for(int i=1;i<=n;i++){
-            for(int j=1; j<=n; j++){
-                if(dp[i-1][j-1]==-1) continue;
+        for(int i=0;i<n;i++){
+            for(int j=0; j<n; j++){
+                if(dp[i][j]==-1) continue;
 
-               if(a[i] < b[j])
-                dp[i][j-1]=Math.max(dp[i][j-1], dp[i-1][j]);
-               if(a[i] > b[j])
-                dp[i-1][j]=Math.max(dp[i-1][j], dp[i-1][j-1] + b[j]);
+               if(a[i+1] < b[j+1])
+                dp[i+1][j]=Math.max(dp[i+1][j], dp[i][j]);
+               if(a[i+1] > b[j+1])
+                dp[i][j+1]=Math.max(dp[i][j+1], dp[i][j] + b[j+1]);
 
-                dp[i][j]=Math.max(dp[i-1][j-1], dp[i][j]);
+                dp[i+1][j+1]=Math.max(dp[i+1][j+1], dp[i][j]);
             }
         }
 
