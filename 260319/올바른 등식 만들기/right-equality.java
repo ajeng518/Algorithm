@@ -11,7 +11,7 @@ public class Main {
             num[i] = sc.nextInt();
         }
         
-        int[][] dp=new int[N+1][41];
+        long[][] dp=new long[N+1][41];
         // for(int i=1;i<=N;i++) Arrays.fill(dp[i], -1);
         
         dp[1][num[1]+OFFSET]+=1;
