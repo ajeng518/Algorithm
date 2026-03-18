@@ -14,8 +14,8 @@ public class Main {
         int[][] dp=new int[N+1][41];
         // for(int i=1;i<=N;i++) Arrays.fill(dp[i], -1);
         
-        dp[1][num[1]+OFFSET]=1;
-        dp[1][-num[1]+OFFSET]=1;
+        dp[1][num[1]+OFFSET]+=1;
+        dp[1][-num[1]+OFFSET]+=1;
 
         for(int i=2;i<= N;i++){
             for(int j=-20; j<=20; j++){
@@ -26,10 +26,10 @@ public class Main {
                 int plus = j+num[i];
                 int minus = j-num[i];
 
-                if(plus <= 20 && plus >=-20)
+                if(plus >=-20 && plus <= 20)
                     dp[i][plus + OFFSET] += dp[i-1][cur];
                 
-                if(minus <=20 && minus >=-20)
+                if(minus >=-20 && minus <=20)
                     dp[i][minus + OFFSET] += dp[i-1][cur];
             }
         }
