@@ -3,7 +3,7 @@ import java.io.*;
 
 public class Main {
     static int[][] map;
-    static boolean[][] visited;
+    static boolean[][][] visited;
     static int n, k;
 
     static int[] dx={-1, 0, 1, 0};
@@ -17,11 +17,12 @@ public class Main {
         k = Integer.parseInt(st.nextToken());
 
         map=new int[n][n];
-        visited= new boolean[n][n];
+        visited= new boolean[n][n][k+1];
 
         for(int i=0;i<n;i++){
             st = new StringTokenizer(br.readLine());
-            for(int j=0;j<n;j++){
+
+            for(int j=0; j<n; j++){
                 map[i][j]=Integer.parseInt(st.nextToken());
             }
         }
@@ -44,7 +45,7 @@ public class Main {
     private static int bfs(int[] start, int[] end){
         Deque<int[]> q =  new ArrayDeque<>();
         q.add(new int[]{start[0], start[1], k});
-        visited[start[0]][start[1]]=true;
+        visited[start[0]][start[1]][k]=true;
 
         int cnt=0;
 
@@ -64,15 +65,16 @@ public class Main {
                     int ny = cur[1]+dy[i];
                     if(ny < 0 || ny >= n) continue;
 
-                    if(visited[nx][ny]) continue;
+                    if(visited[nx][ny][cur[2]]) continue;
+
                     if(map[nx][ny]==1){
                         if(cur[2] > 0){
                             q.add(new int[]{nx, ny, cur[2]-1});
-                            visited[nx][ny]=true;
+                            visited[nx][ny][cur[2]-1]=true;
                         }
                     }else{
                         q.add(new int[]{nx, ny, cur[2]});
-                        visited[nx][ny]=true;
+                        visited[nx][ny][cur[2]]=true;
                     }
                 }
             }
