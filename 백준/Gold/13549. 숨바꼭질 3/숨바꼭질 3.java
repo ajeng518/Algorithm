@@ -1,38 +1,38 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
-
-public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+import java.util.*;
+import java.io.*;
+/*
+*리스트 배열 사용시 컴파일 경고 발생시 사용
+*@SuppressWarnings("unchecked")
+*/
+public class Main{
+    public static void main(String args[]) throws Exception{
+        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int subin = Integer.parseInt(st.nextToken());
-        int sister = Integer.parseInt(st.nextToken());
-        int ans = 0;
+        int n = Integer.parseInt(st.nextToken());
+        int k = Integer.parseInt(st.nextToken());
 
-        if (subin >= sister) {
-            ans = subin - sister;
-        } else {
-            int[] dp = new int[100001];
-            for (int i = 0; i < subin; i++) dp[i] = subin - i;
+        if(n >= k){
+            System.out.println(n-k);
+            
+            System.exit(0);
+        }
+        
+        int[] dp = new int[100001];
+        for(int i=0; i< n; i++) dp[i]=n-i;
 
-            for (int cur = subin + 1; cur <= sister; cur++) {
-                int min;
-                if (cur % 2 == 0)
-                    min = dp[cur / 2];
-                else {
-                    min = Math.min(dp[(cur - 1) / 2] + 1, dp[(cur + 1) / 2] + 1);
-                }
-
-                dp[cur] = Math.min(dp[cur - 1] + 1, min);
+        for(int i = n+1; i<= k; i++){
+            int min;
+            
+            if(i % 2 == 0){
+                min = dp[i/2];    
+            }else{
+                min = Math.min(dp[(i-1) / 2] + 1, dp[(i+1) / 2] + 1);
             }
-            ans = dp[sister];
+
+            dp[i]=Math.min(dp[i-1] + 1, min);
         }
 
-        System.out.println(ans);
+        System.out.println(dp[k]);
     }
-
 }
