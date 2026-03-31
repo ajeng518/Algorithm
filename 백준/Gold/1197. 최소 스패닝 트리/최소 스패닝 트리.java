@@ -3,30 +3,25 @@ import java.io.*;
 
 public class Main{
     static int v, e;
-    static int[] parent,rank;
+    static List<Node>[] list;
 
     static class Node implements Comparable<Node> {
-		int s;
-		int e;
+		int next;
 		int cost;
 
 		public Node() {
 			super();
 		}
 
-		public Node(int s, int e, int cost) {
-			super();
-			this.s = s;
-			this.e = e;
+		public Node(int next, int cost) {
+			this.next = next;
 			this.cost = cost;
 		}
 
 		@Override
 		public int compareTo(Node o) {
-			// TODO Auto-generated method stub
-			return Integer.compare(this.cost, o.cost);// 오름차순
+            return this.cost - o.cost;
 		}
-
 	}
     
     public static void main(String args[]) throws Exception{
@@ -35,59 +30,44 @@ public class Main{
 
         int answer=0;
 
-        v= Integer.parseInt(st.nextToken());
-        e= Integer.parseInt(st.nextToken());
-
-        parent = new int[v+1];
-        rank =new int[v+1];
+        v= Integer.parseInt(st.nextToken());//정점
+        e= Integer.parseInt(st.nextToken());//간선
         
-        for(int i=1;i<=v;i++){
-            parent[i]=i;
-            rank[i]=1;
-        } 
+        list = new List[v+1];
+        for(int i=0;i<=v;i++) list[i]=new ArrayList<>();
 
-        PriorityQueue<Node>pq=new PriorityQueue<>();
-        
         for(int i=1;i<=e;i++){
             st=new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
             int cost = Integer.parseInt(st.nextToken());
             
-            pq.add(new Node(a, b, cost));
+            list[a].add(new Node(b, cost));
+            list[b].add(new Node(a, cost));
         }
         
-        int cnt=0;
-        
-		while(cnt!=v-1) {
-			Node n=pq.poll();
-            
-			if(union(n.s, n.e)) {
-				cnt++;
-				answer+=n.cost;
-			}
-		}
-
-         
-        System.out.println(answer);
+        System.out.println(prim());
     }
-    private static boolean union(int a, int b){
-        int ax=find(a);
-        int by=find(b);
+    
+    private static int prim(){
+        PriorityQueue<Node>pq =new PriorityQueue<>();
+        pq.add(new Node(1, 0));
+        boolean[] visited = new boolean[v+1];
+        int ans =0;
 
-        if(ax==by) return false;
-        if(rank[ax]< rank[by]){
-            rank[by]+=rank[ax];
-            parent[ax]=by;
-        }else {
-            rank[ax]+=rank[by];
-            parent[by]=ax;
+        while(!pq.isEmpty()){
+            Node cur = pq.poll();
+
+            if(visited[cur.next]) continue;
+            ans+=cur.cost;
+            visited[cur.next]=true;
+
+            for(Node next: list[cur.next]){
+                if(visited[next.next]) continue;
+                pq.offer(next);
+            }
         }
 
-        return true;
-    }
-    private static int find(int a){
-        if(a ==parent[a]) return a;
-        else return find(parent[a]);
+        return ans;
     }
 }
