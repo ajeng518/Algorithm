@@ -1,0 +1,29 @@
+-- 코드를 작성해주세요
+WITH RECURSIVE GENERATION_SET AS(
+    SELECT ID,
+            PARENT_ID,
+            1 AS GENERATION
+    FROM ECOLI_DATA
+    WHERE PARENT_ID IS NULL
+    
+    UNION ALL
+    
+    SELECT E.ID,
+            E.PARENT_ID,
+            G.GENERATION+1
+    FROM ECOLI_DATA E
+        JOIN GENERATION_SET AS G
+        ON E.PARENT_ID = G.ID
+)
+
+SELECT COUNT(GENERATION) AS COUNT,
+        GENERATION
+FROM GENERATION_SET
+WHERE ID NOT IN (
+                SELECT A.ID
+                FROM GENERATION_SET A
+                    JOIN GENERATION_SET B
+                    ON A.ID=B.PARENT_ID
+                )
+GROUP BY GENERATION
+;
