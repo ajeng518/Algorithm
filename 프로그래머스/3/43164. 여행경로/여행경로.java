@@ -1,37 +1,75 @@
 import java.util.*;
 
 class Solution{
+    static int ticketSize;
     static boolean[] visited;
-    static List<String> result;
-     public String[] solution(String[][] tickets) {
-         result = new ArrayList<>();
-         String[] answer={};
-         
-         visited=new boolean[tickets.length];
-         re("ICN", "ICN", 0, tickets);
-         
-         Collections.sort(result);
-         answer=result.get(0).split(" ");
-         
-         return answer;
-     }
+    static List<String> list;
     
-    private static void re(String start, String path, int cnt, String[][] tickets){
-        if(cnt ==tickets.length){
-            result.add(path);
-            return;
-        }
+    public String[] solution(String[][] tickets) {
+        ticketSize = tickets.length;
         
-        for(int i=0;i<tickets.length;i++){
-            if(!start.equals(tickets[i][0])) continue;
+        visited=new boolean[ticketSize];
+        list=new ArrayList<>();
+          
+        
+        dfs("ICN", "ICN",  0, tickets);
+        
+        Collections.sort(list);
+        String[] ans = list.get(0).split(" ");
+        return ans;
+    }
+    
+    private static void dfs(String cur, String path, int cnt, String[][] tickets){
+        if(cnt==ticketSize){
+            list.add(path);
+            return;
+        } 
+        
+        for(int i=0;i<ticketSize;i++){
             if(visited[i]) continue;
+            if(!tickets[i][0].equals(cur)) continue;
             
             visited[i]=true;
-            re(tickets[i][1], path+" "+tickets[i][1], cnt+1, tickets);
+            dfs(tickets[i][1], path+" "+tickets[i][1], cnt+1, tickets);
             visited[i]=false;
         }
     }
 }
+
+// import java.util.*;
+
+// class Solution{
+//     static boolean[] visited;
+//     static List<String> result;
+//      public String[] solution(String[][] tickets) {
+//          result = new ArrayList<>();
+//          String[] answer={};
+         
+//          visited=new boolean[tickets.length];
+//          re("ICN", "ICN", 0, tickets);
+         
+//          Collections.sort(result);
+//          answer=result.get(0).split(" ");
+         
+//          return answer;
+//      }
+    
+//     private static void re(String start, String path, int cnt, String[][] tickets){
+//         if(cnt ==tickets.length){
+//             result.add(path);
+//             return;
+//         }
+        
+//         for(int i=0;i<tickets.length;i++){
+//             if(!start.equals(tickets[i][0])) continue;
+//             if(visited[i]) continue;
+            
+//             visited[i]=true;
+//             re(tickets[i][1], path+" "+tickets[i][1], cnt+1, tickets);
+//             visited[i]=false;
+//         }
+//     }
+// }
 
 
 
