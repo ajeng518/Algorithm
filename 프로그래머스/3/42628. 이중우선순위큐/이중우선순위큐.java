@@ -1,6 +1,85 @@
 import java.util.*;
 import java.io.*;
 
+// class Solution{
+//     static class NumInfo{
+//         int idx;
+//         int num;
+        
+//         NumInfo(int idx, int num){
+//             this.idx =idx;
+//             this.num = num;
+//         }
+//     }
+    
+//     public int[] solution(String[] operations) {
+//         int[] answer = {0, 0};
+//         StringTokenizer st;
+//         boolean[] dead = new boolean[operations.length];
+        
+//         PriorityQueue<NumInfo> maxQ=new PriorityQueue<>((a1, a2)-> a2.num-a1.num);
+//         PriorityQueue<NumInfo> minQ=new PriorityQueue<>((a1, a2)-> a1.num-a2.num);
+        
+//         for(int i=0;i< operations.length; i++){
+//             String input = operations[i];
+//             char op = input.charAt(0);
+//             int num = Integer.parseInt(input.substring(2));
+            
+//             if(op =='I'){//입력
+//                 maxQ.add(new NumInfo(i, num));
+//                 minQ.add(new NumInfo(i, num));
+//             }else{
+//                 if(num < 0){
+//                     NumInfo cur = minQ.poll();
+                    
+//                     while(!minQ.isEmpty() && dead[cur.idx]){
+//                         cur = minQ.poll();
+//                     }
+//                     dead[cur.idx]=true;
+//                 }else{
+//                     NumInfo cur = maxQ.poll();
+                    
+//                     while(!maxQ.isEmpty() && dead[cur.idx]){
+//                         cur=maxQ.poll();
+//                     }
+//                     dead[cur.idx]=true;
+//                 }
+//             }
+//         }
+        
+//         if(!minQ.isEmpty()){
+//             NumInfo cur = minQ.poll();
+            
+//             while(!minQ.isEmpty() && dead[cur.idx]){
+//                 cur=minQ.poll();
+//             }
+//             minQ.offer(cur);
+//         }
+        
+//         if(!maxQ.isEmpty()){
+//             NumInfo cur = maxQ.poll();
+            
+//             while(!maxQ.isEmpty() && dead[cur.idx]){
+//                 cur=maxQ.poll();
+//             }
+            
+//             maxQ.offer(cur);
+//         }
+        
+//         if(!maxQ.isEmpty() && !minQ.isEmpty()){
+//             answer=new int[]{maxQ.poll().num, minQ.poll().num};    
+//         }
+//         return answer;
+//     }
+// }
+
+
+
+
+
+
+
+
 class Solution {
     static class NumInfo{
         int idx;
