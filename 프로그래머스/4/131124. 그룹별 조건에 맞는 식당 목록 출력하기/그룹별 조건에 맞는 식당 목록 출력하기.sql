@@ -6,7 +6,7 @@ FROM REST_REVIEW R JOIN MEMBER_PROFILE P
 WHERE R.MEMBER_ID IN (SELECT RR.MEMBER_ID
                       FROM REST_REVIEW RR
                       GROUP BY RR.MEMBER_ID
-                      HAVING COUNT(*) = (SELECT MAX(TT.REVIEW_COUNT)
+                      HAVING COUNT(RR.MEMBER_ID) = (SELECT MAX(TT.REVIEW_COUNT)
                                                     FROM (SELECT COUNT(RE.MEMBER_ID) AS REVIEW_COUNT
                                                           FROM REST_REVIEW RE
                                                           GROUP BY RE.MEMBER_ID) AS TT
